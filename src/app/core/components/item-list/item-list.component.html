@@ -1,0 +1,10 @@
+<div class="item-list-popup" *ngIf="isVisible">
+  <div class="popup-content">
+    <button class="close-button" (click)="closePopup()">×</button>
+    <div class="image-list">
+      <div class="image-item" *ngFor="let image of images">
+        <img [src]="image.url" [alt]="image.alt">
+      </div>
+    </div>
+  </div>
+</div>

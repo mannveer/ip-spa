@@ -1,0 +1,52 @@
+/* Ensure the entire page takes up at least the full height of the viewport */
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Make the app component a flex container */
+:host {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Ensure the inner content takes up all available space */
+.inner-content {
+    flex: 1;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    width: 100vw; /* Set width to be the same as the viewport width */
+}
+
+/* Style for the header */
+app-header {
+    position: relative;
+}
+
+/* Style for the footer to ensure it stays at the bottom */
+app-footer {
+    color: #ffffff;
+    text-align: center;
+}
+
+/* Center the app-available-files component vertically and make it full width */
+app-available-files {
+    width: 100%; /* Full width */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+:host {
+    display: block;
+    height: 100%;
+  }
+  
+  router-outlet + * {
+    display: block;
+    height: 100%;
+  }
+  

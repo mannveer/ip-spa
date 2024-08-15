@@ -1,0 +1,44 @@
+<div class="file-details-comp">
+  <div class="page-heading">
+    <button class="back-button" (click)="goBack()"> < Back</button>
+    File Details
+  </div>
+  <div class="file-details-container">
+    <div class="preview-section">
+      <h2>Preview Images</h2>
+      <app-loader></app-loader>
+      <div *ngIf="file.sampleFiles?.length; else noImages" class="preview-images" @fadeInStagger>
+        <div class="image-card" *ngFor="let image of file.sampleFiles" (click)="zoomImage(image)">
+          <img [src]="image.src" alt="Preview Image">
+        </div>
+      </div>
+      <ng-template #noImages>
+        <p>No preview images available.</p>
+      </ng-template>
+    </div>
+    <div class="file-info">
+      <p><strong>Title:</strong> {{ file.title }}</p>
+      <p><strong>Filename:</strong> {{ file.originalfilename }}</p>
+      <p><strong>Type:</strong> {{ file.mimetype }}</p>
+      <p><strong>Size:</strong> {{ file.size }}</p>
+      <p><strong>Description:</strong> {{ file.description }}</p>
+      <p *ngIf="file.price > 0"><strong>Price:</strong> {{ file.price }} /- inr</p>
+      <div class="button-group">
+        <button class="btn action-button buy-button" (click)="handleActionClick()">
+          {{ file.price > 0 ? 'Buy Now' : 'Download' }}
+        </button>
+        <button *ngIf="file.price > 0" class="btn action-button verify-button" (click)="verifyPayment()">
+          Verify Payment
+        </button>
+        <button class="btn action-button contact-button" (click)="contactMe()">
+          Contact Me
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zoom Modal -->
+  <div *ngIf="selectedImage" class="zoom-modal" (click)="closeZoom()">
+    <img [src]="selectedImage.src" alt="Zoomed Image">
+  </div>
+</div>

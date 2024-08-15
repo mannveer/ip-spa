@@ -1,0 +1,22 @@
+<header class="header">
+  <div class="container">
+    <div class="logo" #logoText (mousemove)="onMouseMove($event)">
+      <span class="logo-text">ipriyanka</span>
+    </div>
+    <nav class="nav">
+      <ul>
+        <li><a routerLink="">Home</a></li>
+        <li><a routerLink="about">About</a></li>
+        <li><a routerLink="services">Services</a></li>
+        <li><a routerLink="contact">Contact me</a></li>
+      </ul>
+    </nav>
+    <div class="actions">
+      <button class="btn primary">Sign Up</button>
+      <button class="btn secondary">Login</button>
+      <button class="btn toggle-theme" (click)="toggleTheme()">
+        <i [class]="isDarkMode ? 'fas fa-moon' : 'fas fa-sun'"></i>
+      </button>
+    </div>
+  </div>
+</header>

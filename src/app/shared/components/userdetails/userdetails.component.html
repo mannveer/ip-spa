@@ -1,0 +1,8 @@
+<div>
+    <form [formGroup] = "user" (ngSubmit)="onSubmit()">
+        <label>Name: 
+        <input type="text" formControlName="name"> </label>
+        <label>Email: 
+        <input type="text" formControlName="email"> </label>
+    </form>
+</div>

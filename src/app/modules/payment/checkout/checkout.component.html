@@ -1,0 +1,82 @@
+<div class="checkout-container">
+  <div class="header">
+    <h1>{{data.purpose == 'pay' ? 'Check-Out' : 'Verify Payment'}}</h1>
+    <button class="close-button" (click)="onClose()">×</button>
+  </div>
+  <form class="checkout-form" [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+    <label for="name">Name <span class="required">*</span></label>
+    <input type="text" id="name" formControlName="name" placeholder="Enter your name" />
+    <div *ngIf="checkoutForm.get('name')?.errors?.['required'] && checkoutForm.get('name')?.touched" class="error-message">
+      Name is required.
+    </div>
+    <div *ngIf="checkoutForm.get('name')?.errors?.['minlength'] && checkoutForm.get('name')?.touched" class="error-message">
+      Name must be at least 6 characters long.
+    </div>
+
+    <label for="email">Email <span class="required">*</span></label>
+    <div class="email-container">
+      <input [disabled]="otpSent || otpVerified" type="email" id="email" formControlName="email" placeholder="Enter your email" />
+      <span *ngIf="otpVerified" class="checkmark">verified✔</span>
+      <button *ngIf="!otpVerified" type="button" class="otp-button" (click)="sendOtp()" [disabled]="otpSent || checkoutForm.get('email')?.invalid || loading">
+        <ng-container *ngIf="loading; else buttonText">
+          <div class="button-loader"></div>
+        </ng-container>
+        <ng-template #buttonText>
+          {{ otpSent ? 'Resend(' + timer + 's)' : 'Send OTP' }}
+        </ng-template>
+      </button>
+    </div>
+    <div *ngIf="checkoutForm.get('email')?.errors?.['required'] && checkoutForm.get('email')?.touched" class="error-message">
+      Email is required.
+    </div>
+    <div *ngIf="checkoutForm.get('email')?.errors?.['email'] && checkoutForm.get('email')?.touched" class="error-message">
+      Enter a valid email.
+    </div>
+    <div *ngIf="checkoutForm.get('email')?.errors?.['serverError'] && checkoutForm.get('email')?.touched" class="error-message">
+      Something went wrong, unable to verify.
+    </div>
+
+    <div *ngIf="otpSent && !otpVerified" class="otp-container">
+      <label for="otp">OTP</label>
+      <input type="text" id="otp" formControlName="otp" placeholder="Enter OTP" />
+      <button type="button" class="verify-button" (click)="verifyOtp()" [disabled]="checkoutForm.get('otp')?.invalid || verifyOtpLoading">
+        <ng-container *ngIf="verifyOtpLoading; else buttonText">
+          <div class="button-loader"></div>
+        </ng-container>
+        <ng-template #buttonText>
+          Verify
+        </ng-template>
+      </button>
+    </div>
+    <div *ngIf="checkoutForm.get('otp')?.errors?.['required'] && checkoutForm.get('otp')?.touched && (otpSent && !otpVerified)" class="error-message">
+      OTP is required.
+    </div>
+    <div *ngIf="checkoutForm.get('otp')?.errors?.['digitValidator'] && checkoutForm.get('otp')?.touched && (otpSent && !otpVerified)" class="error-message">
+      Enter a valid otp.
+    </div>
+    <div *ngIf="checkoutForm.get('otp')?.errors?.['invalidOtp'] && checkoutForm.get('otp')?.touched && (otpSent && !otpVerified)" class="error-message">
+      Invalid OTP.
+    </div>
+    <div *ngIf="data.purpose == 'pay'">
+      <label for="amount">Amount (currency: INR)</label>
+      <input type="number" id="amount" formControlName="amount" placeholder="Enter amount" />
+    </div>
+    <div class="button-container">
+      <button class="pay-button" type="submit" [disabled]="checkoutForm.invalid || !otpVerified || verifyPayLoading">
+        <ng-container *ngIf="verifyPayLoading; else buttonText">
+          <div class="button-loader"></div>
+        </ng-container>
+        <ng-template #buttonText>
+          {{ data.purpose == 'pay' ? 'Pay' : 'Verify' }}
+        </ng-template>
+      </button>
+    </div>
+    <div class="error-message" *ngIf="!isPayNoError">
+      {{ payErrorMessage }}
+    </div>
+    <div class="success-note" *ngIf="alreadyPaid">
+      Already paid. A confirmation email has been resent.
+    </div>
+    <div class="note">*Mandatory to verify email first</div>
+  </form>
+</div>

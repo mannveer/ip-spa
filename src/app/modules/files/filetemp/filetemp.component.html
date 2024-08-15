@@ -1,0 +1,17 @@
+<div class="files-container">
+  <div class="header">
+    <h1>Available Files</h1>
+  </div>
+  <div class="files-content">
+    <p>
+      Here you can find all the files available for download as of {{ currentDate | date: 'MMMM d, y' }}. Click on a file to view more details or to buy and download.
+    </p>
+  </div>
+  <div class="file-list">
+    <div class="file-item" *ngFor="let file of files" (click)="openFileDetails(file)">
+      <h2>{{ file.name }}</h2>
+      <p>Type: {{ file.type }}</p>
+      <button class="buy-button" (click)="onBuyAndDownload(file); $event.stopPropagation()">Buy and download</button>
+    </div>
+  </div>
+</div>

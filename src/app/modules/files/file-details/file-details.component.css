@@ -1,0 +1,167 @@
+:host {
+  display: block;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f7f7f7; /* Light background similar to Dribbble */
+  color: #333; /* Dark text color for readability */
+}
+
+.page-heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333; /* Dark text color for readability */
+  text-align: center;
+  margin: 1rem;
+  position: relative;
+}
+
+.back-button {
+  position: absolute;
+  left: 10px;
+  background-color: #ea4c89; /* Dribbble pink */
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #d63b77; /* Darker pink on hover */
+  transform: scale(1.05);
+}
+
+.back-button:active {
+  background-color: #ea4c89; /* Dribbble pink */
+  transform: scale(1);
+}
+
+.file-details-container {
+  padding: 2rem;
+  background: #ffffff; /* White background for clean look */
+  margin: 1rem auto;
+  max-width: 800px;
+}
+
+.preview-section {
+  margin-bottom: 2rem;
+}
+
+.preview-section h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #333; /* Dark text color for readability */
+}
+
+.preview-images {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.image-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem;
+  background: #f5f7fa; /* Light grey background for image cards */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
+  width: 180px;
+  height: 180px;
+}
+
+.image-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.image-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2); /* Larger shadow on hover */
+}
+
+.file-info {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.file-info p {
+  margin: 0.5rem 0;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.button-group .btn.action-button {
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.button-group .btn.action-button:hover {
+  transform: translateY(-2px);
+}
+
+.buy-button {
+  background-color: #ea4c89; /* Dribbble pink */
+  color: white;
+}
+
+.buy-button:hover {
+  background-color: #d63b77; /* Darker pink on hover */
+}
+
+.verify-button {
+  background-color: #32CD32; /* LimeGreen for verify button */
+  color: white;
+}
+
+.verify-button:hover {
+  background-color: #228B22; /* ForestGreen on hover */
+}
+
+.contact-button {
+  background-color: #ffffff;
+  color: #333; /* Dark text color for readability */
+  border: 2px solid #333; /* Dark border */
+}
+
+.contact-button:hover {
+  background-color: #333; /* Dark background on hover */
+  color: white;
+}
+
+.zoom-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+}
+
+.zoom-modal img {
+  max-width: 90%;
+  max-height: 90%;
+}

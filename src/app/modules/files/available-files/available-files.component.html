@@ -1,0 +1,20 @@
+<div class="homepage">
+  <div class="page-heading">
+    Files available as on {{ currentDate | date: 'MMMM d, y' }}
+  </div>
+  <div class="file-list">
+    <div class="file-item" *ngFor="let file of files" (click)="openFileDetails(file, $event)">
+      <div class="file-preview">
+        <img [src]="file.previewUrl" alt="{{ file.originalfilename }}" (load)="onImageLoad(file)" (error)="onImageError(file)" />
+      </div>
+      <div class="file-info">
+        <span class="file-name">{{ file.originalfilename }}</span>
+        <span class="file-type">{{ file.mimetype }}</span>
+      </div>
+      <button class="buy-button" (click)="onBuyAndDownload(file, $event); $event.stopPropagation();">
+        {{ file.price === 0 ? 'Download' : 'Buy and download' }}
+      </button>
+    </div>
+  </div>
+  <router-outlet></router-outlet>
+</div>

@@ -1,0 +1,30 @@
+.loader {
+  --path: #ff7eb3;
+  --duration: 2s; /* Adjust duration for faster or slower rotation */
+  width: 44px;
+  height: 44px;
+  min-height: 55px; /* Ensure loader has a minimum height */
+  display: inline-flex; /* Changed to inline-flex for alignment */
+  justify-content: center;
+  align-items: center;
+}
+.loader svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  animation: rotate var(--duration) linear infinite; /* Applies rotation animation */
+}
+.loader svg circle {
+  fill: none;
+  stroke: var(--path);
+  stroke-width: 10px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-dasharray: 150 50 150 50;
+  stroke-dashoffset: 75;
+}
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}

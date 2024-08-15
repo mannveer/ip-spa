@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+
+/* General styles for the header */
+.header {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem 0;
+  font-family: 'Poppins', sans-serif;
+  transition: background-color 0.3s ease;
+}
+
+body.dark-mode .header {
+  background-color: #3c3c3c;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.logo {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 1.8rem; /* Adjust font size as needed */
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.3s ease;
+  overflow: hidden; /* Ensure gradient overflow is hidden */
+}
+
+.logo .logo-text {
+  position: relative;
+  display: inline-block;
+  background: linear-gradient(to right, #000000, #a0a6f6); /* Initial gradient */
+  -webkit-background-clip: text; /* Clip text to gradient */
+  background-clip: text;
+  color: transparent; /* Hide actual text */
+  transition: background-position 0.3s ease;
+}
+
+/* .logo:hover .logo-text {
+  background-size: 200% 200%; 
+  background-position: 100% 0; 
+} */
+
+.nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.nav a {
+  color: #511717;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+body.dark-mode .nav a {
+  color: #f5f7fa;
+}
+
+.nav a:hover {
+  color: #a0a6f6;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 0.5rem 1.5rem;
+  border: none;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 20px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.primary {
+  background-color: #e60023;
+  color: white;
+}
+
+.primary:hover {
+  background-color: #c2001c;
+}
+
+body.dark-mode .primary {
+  background-color: #a3001a;
+}
+
+.secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.secondary:hover {
+  background-color: #5a6268;
+}
+
+body.dark-mode .secondary {
+  background-color: #494f54;
+}
+
+.toggle-theme {
+  background-color: #007bff;
+  color: white;
+}
+
+body.dark-mode .toggle-theme {
+  background-color: #4c9aff;
+}
+
+.toggle-theme:hover {
+  background-color: #0056b3;
+}
+
+body.dark-mode .toggle-theme:hover {
+  background-color: #357abd;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav ul {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+}

@@ -1,0 +1,20 @@
+<div class="services-container">
+  <div class="header">
+    <h1>My Services</h1>
+  </div>
+  <div class="services-content">
+    <p>
+      I offer a wide range of graphic design services to meet your needs. Below are some of the services I specialize in. Feel free to explore and reach out for custom requests.
+    </p>
+  </div>
+  <div class="service-list">
+    <div class="service-item" *ngFor="let service of services">
+      <h2>{{ service.title }}</h2>
+      <p>{{ service.description }}</p>
+      <div class="button-container">
+        <button class="view-samples-button" (click)="viewSamples(service)" [disabled]="service.sampleFiles <= 0">View Samples</button>
+      </div>
+    </div>
+  </div>
+  <app-item-list [isVisible]="showSamples" (close)="closeSamples()"></app-item-list>
+</div>
