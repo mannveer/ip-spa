@@ -1,6 +1,9 @@
 import { Component, Renderer2, Inject, OnInit } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { SignupComponent } from '../../auth/signup/signup.component';
+import { SigninComponent } from '../../auth/signin/signin.component';
 
 @Component({
   selector: 'app-header',
@@ -11,8 +14,9 @@ import { RouterModule } from '@angular/router';
 })
 export class HeaderComponent implements OnInit {
   public isDarkMode: boolean = false;
+  menuOpen = false;
 
-  constructor(private renderer: Renderer2, @Inject(DOCUMENT) private document: Document) {}
+  constructor(public dialog: MatDialog,private renderer: Renderer2, @Inject(DOCUMENT) private document: Document) {}
 
   ngOnInit(): void {
     // Check if dark mode was previously enabled
@@ -31,6 +35,31 @@ export class HeaderComponent implements OnInit {
       this.renderer.removeClass(this.document.body, 'dark-mode');
       localStorage.setItem('theme', 'light');
     }
+  }
+
+  register(): void {
+    this.dialog.open(SignupComponent, {
+      width: '400px',
+      disableClose: true,
+      panelClass: 'custom-dialog-container'
+    });
+  }
+
+  login(): void {
+    this.dialog.open(SigninComponent, {
+      width: '400px',
+      disableClose: true,
+      panelClass: 'custom-dialog-container'
+    });
+  }
+
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  closeMenu() {
+    this.menuOpen = false;
   }
 
   onMouseMove(event: MouseEvent): void {

@@ -1,0 +1,56 @@
+<section class="featured-work">
+  <div class="container">
+    <h2 class="section-title">Explore My Projects</h2>
+    <p class="section-subtitle">Explore my latest and most impactful design projects, spanning multiple categories.</p>
+
+    <div class="filters">
+      <button
+        class="filter-btn"
+        [ngClass]="{ 'active-filter': currentCategory === 'all' }"
+        (click)="filterProjects('all')"
+      >
+        All
+      </button>
+      <ng-container *ngFor="let category of categories">
+        <button
+          class="filter-btn"
+          [ngClass]="{ 'active-filter': currentCategory === category }"
+          (click)="filterProjects(category)"
+        >
+          {{ category }}
+        </button>
+      </ng-container>
+    </div>
+
+    <div class="project-grid">
+      <div class="project-card" *ngFor="let project of displayedProjects">
+        <a [routerLink]="project.projectUrl" attr.aria-label="{{ project.title }}">
+          <img
+            [src]="project.imageUrl"
+            [alt]="project.title"
+            class="project-image"
+            (error)="project.imageUrl = 'assets/placeholder.png'"
+          />
+          <div class="overlay">
+            <h3 class="project-title">{{ project.title }}</h3>
+            <p class="project-description">{{ project.description }}</p>
+            <span class="project-category">{{ project.category }}</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="pagination">
+      <button class="pagination-btn" (click)="loadPreviousPage()" [disabled]="currentPage === 0">Previous</button>
+      <button
+        class="pagination-btn"
+        (click)="loadNextPage()"
+        [disabled]="(currentPage + 1) * projectsPerPage >= getFilteredProjects().length"
+      >
+        Next
+      </button>
+    </div>
+
+    <a routerLink="/about" class="btn-primary">View Full Portfolio</a>
+  </div>
+</section>

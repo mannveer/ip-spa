@@ -1,31 +1,28 @@
-<div class="checkout-container">
-  <div class="header">
-    <h1>{{data.purpose == 'pay' ? 'Check-Out' : 'Verify Payment'}}</h1>
-    <button class="close-button" (click)="onClose()">×</button>
-  </div>
+<div class="signup-popup">
+  <div class="signup-container">
+
+    <button mat-icon-button class="close-button" (click)="onClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <h2 class="signup-title">{{data.purpose == 'pay' ? 'Checkout' : 'Verify Payment'}}</h2>
+  
   <form class="checkout-form" [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
-    <label for="name">Name <span class="required">*</span></label>
-    <input type="text" id="name" formControlName="name" placeholder="Enter your name" />
+    <mat-form-field appearance="fill">
+      <mat-label>Name</mat-label>
+      <input class="input-box" matInput formControlName="name" placeholder="Enter your name" required>
     <div *ngIf="checkoutForm.get('name')?.errors?.['required'] && checkoutForm.get('name')?.touched" class="error-message">
       Name is required.
     </div>
     <div *ngIf="checkoutForm.get('name')?.errors?.['minlength'] && checkoutForm.get('name')?.touched" class="error-message">
-      Name must be at least 6 characters long.
+      Name must be at least 3 characters long.
     </div>
+  </mat-form-field>
 
-    <label for="email">Email <span class="required">*</span></label>
-    <div class="email-container">
-      <input [disabled]="otpSent || otpVerified" type="email" id="email" formControlName="email" placeholder="Enter your email" />
-      <span *ngIf="otpVerified" class="checkmark">verified✔</span>
-      <button *ngIf="!otpVerified" type="button" class="otp-button" (click)="sendOtp()" [disabled]="otpSent || checkoutForm.get('email')?.invalid || loading">
-        <ng-container *ngIf="loading; else buttonText">
-          <div class="button-loader"></div>
-        </ng-container>
-        <ng-template #buttonText>
-          {{ otpSent ? 'Resend(' + timer + 's)' : 'Send OTP' }}
-        </ng-template>
-      </button>
-    </div>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Email</mat-label>
+    <input class="input-box" matInput [disabled]="otpSent || otpVerified" formControlName="email" placeholder="Enter your email" required>
+    <span *ngIf="otpVerified" class="checkmark">verified✔</span>
     <div *ngIf="checkoutForm.get('email')?.errors?.['required'] && checkoutForm.get('email')?.touched" class="error-message">
       Email is required.
     </div>
@@ -35,19 +32,19 @@
     <div *ngIf="checkoutForm.get('email')?.errors?.['serverError'] && checkoutForm.get('email')?.touched" class="error-message">
       Something went wrong, unable to verify.
     </div>
+    <button *ngIf="!otpVerified" type="button" class="otp-button" (click)="sendOtp()" [disabled]="otpSent || checkoutForm.get('email')?.invalid || loading">
+      <ng-container *ngIf="loading; else buttonText">
+        <div class="button-loader"></div>
+      </ng-container>
+      <ng-template #buttonText>
+        {{ otpSent ? 'Resend(' + timer + 's)' : 'Send OTP' }}
+      </ng-template>
+    </button>
+  </mat-form-field>
 
-    <div *ngIf="otpSent && !otpVerified" class="otp-container">
-      <label for="otp">OTP</label>
-      <input type="text" id="otp" formControlName="otp" placeholder="Enter OTP" />
-      <button type="button" class="verify-button" (click)="verifyOtp()" [disabled]="checkoutForm.get('otp')?.invalid || verifyOtpLoading">
-        <ng-container *ngIf="verifyOtpLoading; else buttonText">
-          <div class="button-loader"></div>
-        </ng-container>
-        <ng-template #buttonText>
-          Verify
-        </ng-template>
-      </button>
-    </div>
+  <mat-form-field appearance="fill" *ngIf="otpSent && !otpVerified">
+    <mat-label>OTP</mat-label>
+    <input class="input-box" matInput formControlName="otp" placeholder="Enter your otp" required>
     <div *ngIf="checkoutForm.get('otp')?.errors?.['required'] && checkoutForm.get('otp')?.touched && (otpSent && !otpVerified)" class="error-message">
       OTP is required.
     </div>
@@ -57,20 +54,32 @@
     <div *ngIf="checkoutForm.get('otp')?.errors?.['invalidOtp'] && checkoutForm.get('otp')?.touched && (otpSent && !otpVerified)" class="error-message">
       Invalid OTP.
     </div>
-    <div *ngIf="data.purpose == 'pay'">
-      <label for="amount">Amount (currency: INR)</label>
-      <input type="number" id="amount" formControlName="amount" placeholder="Enter amount" />
-    </div>
-    <div class="button-container">
-      <button class="pay-button" type="submit" [disabled]="checkoutForm.invalid || !otpVerified || verifyPayLoading">
-        <ng-container *ngIf="verifyPayLoading; else buttonText">
-          <div class="button-loader"></div>
-        </ng-container>
-        <ng-template #buttonText>
-          {{ data.purpose == 'pay' ? 'Pay' : 'Verify' }}
-        </ng-template>
-      </button>
-    </div>
+    <button type="button" class="verify-button" (click)="verifyOtp()" [disabled]="checkoutForm.get('otp')?.invalid || verifyOtpLoading">
+      <ng-container *ngIf="verifyOtpLoading; else buttonText">
+        <div class="button-loader"></div>
+      </ng-container>
+      <ng-template #buttonText>
+        Verify
+      </ng-template>
+    </button>
+  </mat-form-field>
+
+  <div *ngIf="data.purpose == 'pay'">
+    <mat-label for="amount"> Amount :  <strong>{{ data.file.price | currency:"INR" }}</strong> </mat-label>
+  </div>
+
+  <div *ngIf="otpVerified" class="session-timer">
+    <p>Your session will expire in <span>{{ formattedTime }}</span></p>
+  </div>
+
+  <button mat-raised-button color="primary" type="submit" [disabled]="checkoutForm.invalid || !otpVerified || verifyPayLoading">
+    <ng-container *ngIf="verifyPayLoading; else buttonText">
+      <div *ngIf="isPaymentStarted" class="button-loader"></div>
+    </ng-container>
+    <ng-template #buttonText>
+      {{ data.purpose == 'pay' ? 'Pay' : 'Verify' }}
+    </ng-template>
+  </button>
     <div class="error-message" *ngIf="!isPayNoError">
       {{ payErrorMessage }}
     </div>
@@ -79,4 +88,5 @@
     </div>
     <div class="note">*Mandatory to verify email first</div>
   </form>
+  </div>
 </div>

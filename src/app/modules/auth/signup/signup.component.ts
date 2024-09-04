@@ -1,39 +1,50 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, Renderer2 } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIcon
+  ],
   templateUrl: './signup.component.html',
-  styleUrl: './signup.component.css'
+  styleUrls: ['./signup.component.css'],
 })
 export class SignupComponent {
-  username: string = '';
-  email: string = '';
-  password: string = '';
+  signupForm: FormGroup;
+  hide = true;
 
-  constructor(private http: HttpClient, private dialogRef: MatDialogRef<SignupComponent>) {}
-
-  onClose(): void {
-    this.dialogRef.close();
+  constructor(private renderer: Renderer2, private fb: FormBuilder, private dialogRef: MatDialogRef<SignupComponent>) {
+    this.signupForm = this.fb.group({
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+    });
   }
 
-  signUp() {
-    const userDetails = {
-      username: this.username,
-      email: this.email,
-      password: this.password,
-    };
+  onSubmit() {
+    if (this.signupForm.valid) {
+      // Handle signup logic
+      console.log(this.signupForm.value);
+      this.closeDialog();
+    }
+  }
 
-    this.http.post('http://localhost:3000/api/v1/auth/signup', userDetails).subscribe(response => {
-      console.log('User signed up successfully', response);
-      this.dialogRef.close();
-    }, error => {
-      console.error('Error during sign up', error);
-    });
+  closeDialog(): void {
+    this.renderer.removeClass(document.body, 'no-scroll'); // Re-enable scrolling and reset background
+    this.dialogRef.close();
   }
 }

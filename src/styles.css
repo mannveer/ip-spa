@@ -10,113 +10,185 @@ body {
   filter: blur(8px);
 }
 
-.transparent-dialog-container .mat-dialog-container {
-  background: transparent !important;
-  box-shadow: none !important;
-  padding: 0;
-  overflow: visible;
-}
-
-.transparent-dialog-container .checkout-container {
-  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-  border-radius: 20px;
-  padding: 1rem;
-  max-width: 600px;
-  min-width: 400px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  margin: 0.5rem auto;
-}
 
 
-/* Dark mode styles */
+/* General Dark Mode Styles */
 body.dark-mode {
-  background-color: #121212;
-  color: #e0e0e0;
+  background-color: #121212; /* Dark background for the whole body */
+  color: #e0e0e0; /* Light text color for readability */
 }
 
-body.dark-mode .header {
-  background-color: #333;
-  color: #e0e0e0;
+/* Text color adjustments */
+body.dark-mode h1, 
+body.dark-mode h2, 
+body.dark-mode h3, 
+body.dark-mode h4, 
+body.dark-mode h5, 
+body.dark-mode h6, 
+body.dark-mode p, 
+body.dark-mode a {
+  color: #e0e0e0; /* Light text color */
 }
 
-body.dark-mode .logo .logo-text {
-  background: linear-gradient(to right, #a0a6f6, #810036); /* Adjust gradient for better visibility in dark mode */
+/* Links */
+body.dark-mode a {
+  color: #bb86fc; /* Light purple color for links */
 }
 
-body.dark-mode .nav a {
-  color: #e0e0e0;
+body.dark-mode a:hover {
+  color: #9a66cc; /* Darker purple on hover */
 }
 
-body.dark-mode .nav a:hover {
-  color: #80bfff; /* Light blue hover color */
+/* Background colors */
+body.dark-mode .background, 
+body.dark-mode .container, 
+body.dark-mode .card, 
+body.dark-mode .modal {
+  background-color: #1e1e1e; /* Darker background for containers */
 }
 
-body.dark-mode .btn {
-  background-color: #444;
-  color: #e0e0e0;
+/* Borders */
+body.dark-mode .border, 
+body.dark-mode .input-field, 
+body.dark-mode .button {
+  border-color: #333; /* Dark borders */
 }
 
+/* Buttons */
 body.dark-mode .btn.primary {
-  background-color: #d32f2f;
+  background-color: #bb86fc; /* Light purple for primary buttons */
+  color: #121212; /* Dark text on buttons */
+}
+
+body.dark-mode .btn.primary:hover {
+  background-color: #9a66cc; /* Darker purple on hover */
 }
 
 body.dark-mode .btn.secondary {
-  background-color: #757575;
+  background-color: #333; /* Dark grey for secondary buttons */
+  color: #e0e0e0; /* Light text on buttons */
 }
 
-body.dark-mode .btn.toggle-theme {
-  background-color: #1976d2;
+body.dark-mode .btn.secondary:hover {
+  background-color: #444; /* Slightly lighter grey on hover */
 }
 
-/* Specific components adjustments */
+/* Form inputs */
+body.dark-mode .input-field {
+  background-color: #333; /* Dark background for inputs */
+  color: #e0e0e0; /* Light text in inputs */
+}
+
+body.dark-mode .input-field::placeholder {
+  color: #666; /* Placeholder text color */
+}
+
+/* Header */
+body.dark-mode .header {
+  background-color: #1e1e1e; /* Dark background for the header */
+  color: #e0e0e0; /* Light text color */
+}
+
+/* Footer */
+body.dark-mode .footer {
+  background-color: #1e1e1e; /* Dark background for the footer */
+  color: #e0e0e0; /* Light text color */
+}
+
+/* Cards and Modals */
+body.dark-mode .card, 
+body.dark-mode .modal {
+  background-color: #1e1e1e; /* Dark background for cards and modals */
+  color: #e0e0e0; /* Light text color */
+}
+
+/* Tables */
+body.dark-mode table {
+  background-color: #1e1e1e; /* Dark background for tables */
+  color: #e0e0e0; /* Light text color */
+}
+
+body.dark-mode th, 
+body.dark-mode td {
+  border-color: #333; /* Darker borders for table cells */
+}
+
+/* Additional elements */
+body.dark-mode .highlight {
+  background-color: #333; /* Dark background for highlighted elements */
+  color: #e0e0e0; /* Light text color */
+}
+
+body.dark-mode .homepage {
+  background-color: #333; /* Dark background for inner content */
+  color: #e0e0e0; /* Light text color */
+}
 
 body.dark-mode .services-container {
-  background: linear-gradient(135deg, #3a3a3a, #1e1e1e); /* Darker background gradient */
-  color: #e0e0e0; /* Lighter text color */
+  background-color: #333; /* Dark background for inner content */
+  color: #e0e0e0; /* Light text color */
 }
 
-body.dark-mode .services-container h1,
-body.dark-mode .services-container h2,
-body.dark-mode .services-container p {
-  color: #e0e0e0; /* Lighter heading and paragraph text color */
+body.dark-mode .contact-container,
+body.dark-mode .about-container,
+body.dark-mode .signup-container,
+body.dark-mode .services-container div {
+  background-color: #333; /* Dark background for inner content */
+  color: #e0e0e0; /* Light text color */
 }
 
-body.dark-mode .service-item {
-  background: #444; /* Darker background */
-  color: #e0e0e0; /* Lighter text color */
+/* body.dark-mode .about-container h1, */
+body.dark-mode .services-container h1 {
+  background-color: #1e1e1e; /* Dark background for inner content */
+  color: #ffffff; /* Light text color */
 }
 
-body.dark-mode .contact-container {
-  background: linear-gradient(135deg, #3a3a3a, #1e1e1e); /* Darker background gradient */
-  color: #e0e0e0; /* Lighter text color */
+body.dark-mode input,
+body.dark-mode textarea {
+  background-color: #808080; /* Dark background for inputs */
+  color: #e0e0e0; /* Light text in inputs */
 }
 
-body.dark-mode .contact-container h1,
-body.dark-mode .contact-container h2,
-body.dark-mode .contact-container p {
-  color: #e0e0e0; /* Lighter heading and paragraph text color */
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+  color: #666; /* Placeholder text color */
 }
 
-body.dark-mode .contact-container label {
-  color: #ccc; /* Lighter label text color */
+body.dark-mode .file-details-comp span,
+body.dark-mode .file-details-comp button,
+body.dark-mode .signin-container span,
+body.dark-mode .signin-container button,
+body.dark-mode .signup-container span,
+body.dark-mode .signup-container button {
+    color: #000000; /* Light text color */
 }
 
-body.dark-mode .file-list .file-item {
-  background: #444; /* Darker background */
-  color: #e0e0e0; /* Lighter text color */
+
+body.dark-mode .file-details-comp div,
+body.dark-mode .file-details-comp input,
+body.dark-mode .file-details-comp label,
+body.dark-mode .signin-container div,
+body.dark-mode .signup-container div,
+body.dark-mode .signin-container input,
+body.dark-mode .signin-container label,
+body.dark-mode .signup-container input,
+body.dark-mode .signup-container label {
+    background-color: #333; /* Dark background for inner content */
+    color: #e0e0e0; /* Light text color */
 }
 
-body.dark-mode .file-item:hover {
-  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.5); /* Darker box shadow on hover */
+body.dark-mode .file-details-comp{
+    background-color: #333; /* Dark background for inner content */
+    color: #e0e0e0; /* Light text color */
 }
 
-body.dark-mode .file-item::before {
-  background-color: rgba(255, 255, 255, 0.2); /* Lighter overlay effect */
+body.dark-mode .file-details-comp h2 {
+  background-color: #000000; /* Dark background for inner content */
+  color: #ffffff; /* Light text color */
 }
 
-body.dark-mode .page-heading {
-  color: #e0e0e0; /* Lighter page heading text color */
+body.dark-mode .file-list div{
+  background-color: #000000; /* Dark background for inner content */
+  color: #e0e0e0; /* Light text color */
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

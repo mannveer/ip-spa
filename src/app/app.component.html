@@ -1,10 +1,5 @@
 <app-header></app-header>
-<div class="inner-content" [@fadeAnimation]="o.isActivated ? o.activatedRoute : ''">
-    <!-- <app-loader></app-loader> -->
-    <router-outlet #o="outlet"></router-outlet>   
+<div class="inner-content">
+    <router-outlet></router-outlet>
 </div>
-
-<!-- <div class="inner-content">
-    <app-filetemp></app-filetemp>
-</div> -->
 <app-footer></app-footer>

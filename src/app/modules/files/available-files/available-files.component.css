@@ -1,12 +1,17 @@
 :host {
   display: block;
   font-family: 'Poppins', sans-serif;
-  background-color: #f7f7f7; /* Light background similar to Dribbble */
-  color: #333; /* Dark text color for readability */
+  background-color: #f7f7f7;
+  color: #333;
+}
+
+.homepage {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1rem;
 }
 
 .page-heading {
-  font-family: 'Poppins', sans-serif;
   font-size: 2rem;
   font-weight: bold;
   color: #333;
@@ -17,92 +22,278 @@
 .file-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 2rem;
-  padding: 2rem;
+  gap: 1.5rem;
+  padding: 1rem;
   justify-content: center;
 }
 
 .file-item {
-  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   padding: 1.5rem;
-  background: #ffffff; /* White background for file cards */
-  border-radius: 15px; /* Rounded corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  color: #333;
+  width: 260px;
+  height: 300px;
   cursor: pointer;
-  overflow: hidden;
-  width: 240px;
-  height: 320px;
+  position: relative;
 }
 
 .file-item:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2); /* Larger shadow on hover */
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
 }
-.file-item:hover .file-preview img {
-  transform: scale(1.1);
-}
+
 .file-preview img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  /* border-radius: 10px; */
   transition: transform 0.3s ease;
 }
 
+.file-item:hover .file-preview img {
+  transform: scale(1.1);
+}
+
 .file-info {
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
 }
 
 .file-name {
-  font-family: 'Poppins', sans-serif;
   font-weight: bold;
   font-size: 1.2rem;
   margin-bottom: 0.5rem;
 }
 
 .file-type {
-  font-family: 'Poppins', sans-serif;
   font-size: 1rem;
-  color: #888; /* Lighter text color for file type */
+  color: #888;
 }
 
 .buy-button {
   align-self: flex-end;
-  background-color: #ea4c89; /* Dribbble pink */
+  background-color: #ea4c89;
   color: white;
   border: none;
   padding: 0.7rem 1.5rem;
   border-radius: 25px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  opacity: 0;
+  transition: background-color 0.3s ease;
   visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
 }
 
 .file-item:hover .buy-button {
-  opacity: 1;
   visibility: visible;
+  opacity: 1;
 }
 
 .buy-button:hover {
-  background-color: #d63b77; /* Darker pink on hover */
+  background-color: #d63b77;
 }
 
-
-.file-preview {
+.search-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
-  height: 200px; /* Adjust height as needed */
-  overflow: hidden;
+  max-width: 600px;
+  padding: 0 1rem;
+  margin: 0 auto; /* Center container */
+}
+
+.search-bar {
   display: flex;
   align-items: center;
-  justify-content: center;
+  background-color: #ffffff;
+  border-radius: 50px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  overflow: hidden;
+  padding: 0.5rem;
+  transition: box-shadow 0.3s ease;
 }
 
-.file-preview img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: cover;
+.search-bar input {
+  flex-grow: 1;
+  padding: 0.7rem 1rem;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 50px;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+}
+
+.search-bar input:focus {
+  background-color: #f0f0f0;
+}
+
+.search-bar .icon-button {
+  background-color: transparent;
+  border: none;
+  color: #888;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  border-radius: 50%;
+  margin-left: 0.3rem;
+}
+
+.search-bar .icon-button:hover {
+  color: #555;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.search-bar .clear-icon {
+  color: #ea4c89;
+}
+
+.search-bar .clear-icon:hover {
+  color: #d63b77;
+}
+
+.search-bar .search-icon {
+  color: #4caf50;
+}
+
+.search-bar .search-icon:hover {
+  color: #45a049;
+}
+
+.search-bar .filter-button {
+  color: #ffc107;
+}
+
+.search-bar .filter-button:hover {
+  color: #ffb300;
+}
+
+.filter-container {
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 500px;
+  transition: height 300ms ease-out, opacity 300ms ease-out;
+  overflow: hidden;
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filter-header h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.filter-item {
+  flex: 1 1 calc(50% - 1rem);
+  min-width: 120px;
+}
+
+.filter-item label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.filter-item select {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-family: 'Poppins', sans-serif;
+}
+
+.apply-button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.apply-button:hover {
+  background-color: #45a049;
+}
+
+.suggestions {
+  margin-top: 1rem;
+  z-index: 10;
+  width: 100%;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.suggestions ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.suggestions li {
+  padding: 1rem;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.suggestions li:hover {
+  background-color: #f1f1f1;
+}
+
+.clear-icon {
+  background-color: transparent;
+  color: #888;
+}
+
+.clear-icon:hover {
+  color: #555;
+}
+
+@media (max-width: 600px) {
+  .search-container {
+    padding: 0 0.5rem;
+  }
+
+  .search-bar input {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .icon-button.filter-button {
+    font-size: 1rem;
+    padding: 0.4rem;
+  }
+  
+  .filter-container {
+    padding: 0.5rem;
+  }
 }

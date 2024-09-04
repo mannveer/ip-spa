@@ -22,7 +22,7 @@
       <p><strong>Type:</strong> {{ file.mimetype }}</p>
       <p><strong>Size:</strong> {{ file.size }}</p>
       <p><strong>Description:</strong> {{ file.description }}</p>
-      <p *ngIf="file.price > 0"><strong>Price:</strong> {{ file.price }} /- inr</p>
+      <p *ngIf="file.price > 0"><strong>Price:</strong> {{ file.price | currency:"INR" }}</p>
       <div class="button-group">
         <button class="btn action-button buy-button" (click)="handleActionClick()">
           {{ file.price > 0 ? 'Buy Now' : 'Download' }}

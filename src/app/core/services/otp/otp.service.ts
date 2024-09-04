@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { OtpResponse, SendOtpRequest, VerifyOtpRequest } from '../../../shared/models/otp/otp.model';
 import { VerificationResult } from '../../../shared/models/payment/payment.model';
+import { AuthService } from '../auth/auth.service';
 // import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -13,7 +14,7 @@ export class OtpService {
   // private apiUrl = environment.apiUrl;
   private apiUrl = "http://localhost:3000/api/v1/otp";
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authservice:AuthService) {}
 
   private getHttpOptions(): { headers: HttpHeaders } {
     const token = localStorage.getItem('authToken'); // Retrieve your token from storage
@@ -35,7 +36,7 @@ export class OtpService {
       );
   }
 
-  verifyOtp(otpDetails: VerifyOtpRequest): Observable<HttpResponse<VerificationResult>> {
+  verifyOtp1(otpDetails: VerifyOtpRequest): Observable<HttpResponse<VerificationResult>> {
     const options = { ...this.getHttpOptions(), observe: 'response' as 'response' };
     return this.http.post<VerificationResult>(`${this.apiUrl}/validate`, otpDetails, options)
       .pipe(
@@ -43,6 +44,9 @@ export class OtpService {
       );
   }
 
+  verifyOtp(otpDetails: VerifyOtpRequest): Observable<HttpResponse<any>> {
+    return this.authservice.otpLogin(otpDetails);
+  }
   private handleError(error: any): Observable<never> {
     // let errorMessage = '';
     // if (error.error instanceof ErrorEvent) {

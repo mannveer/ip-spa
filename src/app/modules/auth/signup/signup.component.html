@@ -1,21 +1,39 @@
-<div class="auth-container">
-    <div class="header">
-      <h1>Sign Up</h1>
-      <button class="close-button" (click)="onClose()">×</button>
-    </div>
-    <div class="auth-form">
-      <label for="username">Username *</label>
-      <input type="text" id="username" [(ngModel)]="username" placeholder="Enter your username" required />
-  
-      <label for="email">Email *</label>
-      <input type="email" id="email" [(ngModel)]="email" placeholder="Enter your email" required />
-  
-      <label for="password">Password *</label>
-      <input type="password" id="password" [(ngModel)]="password" placeholder="Enter your password" required />
-  
-      <div class="button-container">
-        <button class="auth-button" (click)="signUp()">Sign Up</button>
-      </div>
-    </div>
+<div class="signup-popup">
+  <div class="signup-container">
+    <button mat-icon-button class="close-button" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <h2 class="signup-title">Sign Up</h2>
+
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" placeholder="Enter your name" required>
+        <mat-error *ngIf="signupForm.get('name').invalid && signupForm.get('name').touched">
+          Name is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" placeholder="Enter your email" required>
+        <mat-error *ngIf="signupForm.get('email').invalid && signupForm.get('email').touched">
+          Please enter a valid email
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" placeholder="Enter your password" required>
+        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <mat-error *ngIf="signupForm.get('password').invalid && signupForm.get('password').touched">
+          Password is required (min 6 characters)
+        </mat-error>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="signupForm.invalid">Sign Up</button>
+    </form>
   </div>
-  
+</div>

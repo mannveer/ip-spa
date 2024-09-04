@@ -1,15 +1,17 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { CustomFileModel } from '../../../shared/models/custom-file/custom-file.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FilesService {
-  apiUrl = 'http://localhost:3000/api/v1/file';
-  currentFile: CustomFileModel | null = null;
-  constructor(private http: HttpClient) {  }
+  private readonly apiUrl = 'http://localhost:3000/api/v1/file';
+  private currentFile: CustomFileModel | null = null;
+
+  constructor(private http: HttpClient) { }
 
   setCurrentFile(file: CustomFileModel): void {
     this.currentFile = file;
@@ -19,63 +21,68 @@ export class FilesService {
     return this.currentFile;
   }
 
-  getPreviewUrl(fileName:string):string{
-    return `${this.apiUrl}/file-preview/${fileName}`
+  getPreviewUrl(fileName: string): string {
+    return `${this.apiUrl}/file-preview/${fileName}`;
   }
 
   getFilesInfo(): Observable<CustomFileModel[]> {
-    return this.http.get<CustomFileModel[]>(`${this.apiUrl}/details`);
+    return this.http.get<CustomFileModel[]>(`${this.apiUrl}/details`)
+      .pipe(
+        catchError(this.handleError<CustomFileModel[]>('getFilesInfo', []))
+      );
   }
 
   getFileInfo(id: string): Observable<CustomFileModel> {
-    return this.http.get<CustomFileModel>(`${this.apiUrl}/details/${id}`);
+    return this.http.get<CustomFileModel>(`${this.apiUrl}/details/${id}`)
+      .pipe(
+        catchError(this.handleError<CustomFileModel>('getFileInfo'))
+      );
   }
 
-  getFile(name: string, type:string): Observable<CustomFileModel> {
-    return this.http.get<CustomFileModel>(`${this.apiUrl}/dir/${name}/${type}`);
+  getSampleFiles(filename:string): Observable<Object> {
+    return this.http.get<Object>(`${this.apiUrl}/file-sample-url/${filename}`)
+      .pipe(
+        catchError(this.handleError<Object>('getSampleFiles'))
+      );
   }
 
-  downloadFile(fileName: string,fileType: string): void {
+  getFile(name: string, type: string): Observable<CustomFileModel> {
+    return this.http.get<CustomFileModel>(`${this.apiUrl}/dir/${name}/${type}`)
+      .pipe(
+        catchError(this.handleError<CustomFileModel>('getFile'))
+      );
+  }
+
+  downloadFile(fileName: string, fileType: string): void {
     const url = `${this.apiUrl}/dir/${fileName}/${fileType}`;
-    this.http.get(url, { responseType: 'blob' }).subscribe((blob) => {
-      const downloadUrl = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = downloadUrl;
-      a.download = fileName;
-      a.click();
-      window.URL.revokeObjectURL(downloadUrl);
-    }, (error) => {
-      console.error('File download failed:', error);
-    });
+    this.http.get(url, { responseType: 'blob' })
+      .pipe(
+        catchError(this.handleError('downloadFile'))
+      )
+      .subscribe((blob:any) => this.triggerFileDownload(blob, fileName));
   }
 
   getFileDetails(fileId: string): Observable<CustomFileModel> {
-    return this.http.get<CustomFileModel>(`${this.apiUrl}/details/${fileId}`);
+    return this.http.get<CustomFileModel>(`${this.apiUrl}/details/${fileId}`)
+      .pipe(
+        catchError(this.handleError<CustomFileModel>('getFileDetails'))
+      );
   }
-  // downloadFile(name: string): void {
-  //   this.http.get(`${this.apiUrl}/dir/${name}`, {responseType: 'blob' as 'json'}).subscribe((response:any) => {
-  //     const contentDispositionHeader = response.headers.get('Content-Disposition');
-  //     const fileName = this.getFileNameFromContentDisposition(contentDispositionHeader) || name;
-  //     const blob = new Blob([response.body], {type: response.body.type});
-  //     const url = window.URL.createObjectURL(blob);
-  //     const anchor = document.createElement('a');
-  //     anchor.href = url;
-  //     anchor.download = fileName;
-  //     anchor.click();
-  //     window.URL.revokeObjectURL(url);
-  //   }, (error: any) => {
-  //     console.error('Error downloading file:', error);
-  //   });
-  // }
 
-  // private getFileNameFromContentDisposition(contentDisposition: string): string | null {
-  //   if (contentDisposition) {
-  //     const fileNameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-  //     const matches = fileNameRegex.exec(contentDisposition);
-  //     if (matches != null && matches[1]) {
-  //       return matches[1].replace(/['"]/g, '');
-  //     }
-  //   }
-  //   return null;
-  // }
+  // Private helper methods
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: HttpErrorResponse): Observable<T> => {
+      console.error(`${operation} failed: ${error.message}`);
+      return throwError(() => new Error(`Operation ${operation} failed: ${error.message}`));
+    };
+  }
+
+  private triggerFileDownload(blob: Blob, fileName: string): void {
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = downloadUrl;
+    anchor.download = fileName;
+    anchor.click();
+    window.URL.revokeObjectURL(downloadUrl);
+  }
 }

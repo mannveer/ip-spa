@@ -1,104 +1,86 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
-
-.auth-container {
-  font-family: 'Poppins', sans-serif;
-  padding: 1rem;
-  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-  border-radius: 20px;
-  max-width: 600px;
-  min-width: 300px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  position: relative;
-}
-
-.header {
+.signin-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  font-family: 'Poppins', sans-serif;
+  position: fixed; /* Ensure it covers the entire screen */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Make sure the popup is above other elements */
+  backdrop-filter: blur(8px); /* Blur the background */
+  overflow: hidden; /* Prevent horizontal scrollbars */
 }
 
-.header h1 {
-  font-size: 1.5rem;
-  color: #333;
-  margin: 0;
+body.no-scroll {
+  overflow: hidden; /* Disable scrolling on the main page when the popup is open */
+}
+
+.signin-card {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 400px;
+  position: relative;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .close-button {
   position: absolute;
+  top: 10px;
   right: 10px;
-  background: #ff4d73;
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.close-button:hover {
-  background-color: #ff758c;
-  transform: scale(1.1);
-}
-
-.close-button:active {
-  background-color: #ff4d73;
-  transform: scale(1);
-}
-
-.auth-form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.auth-form label {
-  color: #555;
-  font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 0.2rem;
-}
-
-.auth-form input {
-  padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-}
-
-.auth-form input:focus {
-  border-color: #3399cc;
-  outline: none;
-}
-
-.button-container {
+.signin-title {
   text-align: center;
-  margin-top: 1rem;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #000000;
+  margin-bottom: 1.5rem;
 }
 
-.auth-button {
-  background-color: #ff758c;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 25px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+mat-form-field {
+  width: 100%;
+  margin-bottom: 1.5rem;
 }
 
-.auth-button:hover {
-  background-color: #ff7eb3;
-  transform: translateY(-2px);
+button[type="submit"] {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+  font-weight: bold;
 }
 
-.auth-button:active {
-  background-color: #ff4d73;
-  transform: translateY(0);
+button.close-button {
+  font-size: 1.2rem;
+  color: #000000;
 }
+
+.forgot-password-link {
+  display: block;
+  text-align: right;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: #1976d2; /* Primary color */
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.forgot-password-link:hover {
+  color: #0d47a1; /* Darker shade on hover */
+}
+

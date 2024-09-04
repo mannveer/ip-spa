@@ -20,4 +20,5 @@ export interface CustomFileModel {
     sampleFiles: String[];
     updatedAt?: Date;
     previewUrl:string;
+    designType: string;
 }

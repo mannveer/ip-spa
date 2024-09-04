@@ -3,17 +3,27 @@
     <div class="logo" #logoText (mousemove)="onMouseMove($event)">
       <span class="logo-text">ipriyanka</span>
     </div>
-    <nav class="nav">
+    <button class="menu-btn" (click)="toggleMenu()">
+      <i [class]="menuOpen ? 'fas fa-times' : 'fas fa-bars'"></i>
+    </button>
+    <nav class="nav" [ngClass]="{ 'active': menuOpen }">
       <ul>
-        <li><a routerLink="">Home</a></li>
-        <li><a routerLink="about">About</a></li>
-        <li><a routerLink="services">Services</a></li>
-        <li><a routerLink="contact">Contact me</a></li>
+        <li><a routerLink="" (click)="closeMenu()">Home</a></li>
+        <li><a routerLink="about" (click)="closeMenu()">About</a></li>
+        <li><a routerLink="services" (click)="closeMenu()">Services</a></li>
+        <li><a routerLink="contact" (click)="closeMenu()">Contact me</a></li>
+        <li class="mobile-only"><a (click)="register()">Sign Up</a></li>
+        <li class="mobile-only"><a (click)="login()">Sign In</a></li>
+        <li class="mobile-only"><a (click)="toggleTheme()">
+          <i [class]="isDarkMode ? 'fas fa-moon' : 'fas fa-sun'"></i> Toggle Theme
+        </a></li>
       </ul>
     </nav>
-    <div class="actions">
-      <button class="btn primary">Sign Up</button>
-      <button class="btn secondary">Login</button>
+    
+    <!-- These buttons will be visible on desktop but hidden on mobile -->
+    <div class="actions desktop-only">
+      <button class="btn primary" (click)="register()">Sign Up</button>
+      <button class="btn secondary" (click)="login()">Sign In</button>
       <button class="btn toggle-theme" (click)="toggleTheme()">
         <i [class]="isDarkMode ? 'fas fa-moon' : 'fas fa-sun'"></i>
       </button>

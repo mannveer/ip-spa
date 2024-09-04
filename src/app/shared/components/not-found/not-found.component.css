@@ -1,0 +1,65 @@
+:host {
+  display: block;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f7f7f7;
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.not-found-container {
+  text-align: center;
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+}
+
+.not-found-title {
+  font-size: 6rem;
+  font-weight: bold;
+  color: #ea4c89; /* Pink */
+  margin-bottom: 1rem;
+}
+
+.not-found-message {
+  font-size: 1.5rem;
+  color: #888; /* Grey */
+  margin-bottom: 2rem;
+}
+
+.back-home-btn {
+  background-color: #4caf50; /* Green */
+  color: white;
+  border: none;
+  padding: 0.7rem 2rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.back-home-btn:hover {
+  background-color: #45a049; /* Darker Green */
+}
+
+@media (max-width: 600px) {
+  .not-found-container {
+    padding: 1.5rem;
+  }
+
+  .not-found-title {
+    font-size: 4rem;
+  }
+
+  .not-found-message {
+    font-size: 1.2rem;
+  }
+
+  .back-home-btn {
+    padding: 0.5rem 1.5rem;
+  }
+}

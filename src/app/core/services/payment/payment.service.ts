@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { OrderResponse, PaymentDetails, VerificationResult, VerifyPaymentDetails } from '../../../shared/models/payment/payment.model';
 // import { environment } from '../../environments/environment';
 
@@ -50,4 +50,17 @@ export class PaymentService {
     }
     return throwError(errorMessage);
   }
+
+  isPaymentSuccessful(): Observable<boolean> {
+    // This should ideally call your backend to verify the payment status
+    return this.http.get<{ success: boolean }>('/api/payment/status').pipe(
+      map((response:any) => response.success),
+      catchError(error => {
+        console.error('Payment status check failed:', error);
+        return of(false); // Default to false on error
+      })
+    );
+  }
+
+  
 }
