@@ -3,37 +3,45 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { CustomFileModel } from '../../../shared/models/custom-file/custom-file.model';
 import { FilesService } from '../../../core/services/files/files.service';
-import { CheckoutComponent } from '../../payment/checkout/checkout.component';
 import { LoaderService } from '../../../core/services/loader/loader.service';
 import { MatDialog } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon'; 
-import { trigger, state, style, animate, transition } from '@angular/animations';
-import { FeaturedWorkComponent } from "../../personal/featured-work/featured-work.component";
-
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { CheckoutComponent } from '../../payment/checkout/checkout.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-available-files',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, MatIconModule],
-  templateUrl: './available-files.component.html',
-  styleUrl: './available-files.component.css',
-  animations: [
-    trigger('filterState', [
-      state('collapsed', style({ height: '0px', opacity: 0 })),
-      state('expanded', style({ height: '*', opacity: 1 })),
-      transition('collapsed <=> expanded', animate('300ms ease-out')),
-    ]),
-    trigger('suggestionsState', [
-      state('hidden', style({ height: '0px', opacity: 0 })),
-      state('visible', style({ height: '*', opacity: 1 })),
-      transition('hidden <=> visible', animate('300ms ease-out')),
-    ]),
+  imports: [
+    CommonModule, 
+    RouterModule, 
+    FormsModule, 
+    MatIconModule, 
+    MatInputModule, 
+    MatSelectModule,
+    MatButtonModule,
+    MatCardModule,
+    MatToolbarModule,
+    MatExpansionModule,
+    MatGridListModule,
+    MatAutocompleteModule,
+    MatProgressSpinnerModule
   ],
-
+  templateUrl: './available-files.component.html',
+  styleUrls: ['./available-files.component.scss']
 })
-
 export class AvailableFilesComponent implements OnInit {
+  searchSuggestions: CustomFileModel[] = [];
+isLoading: boolean = true; // Loading state for files
   currentDate: Date = new Date();
   files: CustomFileModel[] = [];
   filteredFiles: CustomFileModel[] = [];
@@ -67,9 +75,27 @@ export class AvailableFilesComponent implements OnInit {
       }
     });
 
-    this.dummyData()
+    // this.dummyData()
 
   }
+  
+  fetchFiles(): void {
+    this.isLoading = true;
+    this.filesService.getFilesInfo().subscribe({
+      next: (filesData: CustomFileModel[]) => {
+        this.files = filesData;
+        this.filteredFiles = filesData; // Initialize filteredFiles with all files
+        this.loadPreviews();
+        this.populateFilterOptions(); // Populate filter dropdowns
+        this.isLoading = false; // Disable loading state after data is loaded
+      },
+      error: (error: any) => {
+        console.error('An error occurred:', error);
+        this.isLoading = false; // Disable loading state even if error occurs
+      }
+    });
+  }
+  
 
   dummyData(){
     const temp : any = [
@@ -154,10 +180,13 @@ export class AvailableFilesComponent implements OnInit {
 
   onSearchInput(event: Event): void {
     const searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
-    this.filteredFiles = this.files.filter(file =>
+    this.searchSuggestions = this.files.filter(file =>
       file.originalfilename.toLowerCase().includes(searchTerm)
     );
+    this.showSuggestions = this.searchSuggestions.length > 0; // Show suggestions only if matches found
+    this.filteredFiles = this.searchSuggestions; // Display filtered suggestions as results
   }
+  
 
   selectSuggestion(file: CustomFileModel): void {
     this.searchQuery = file.originalfilename;
@@ -172,43 +201,47 @@ export class AvailableFilesComponent implements OnInit {
   }
 
   openFileDetails(file: CustomFileModel, event: Event): void {
-    if ((event.target as HTMLElement).closest('button')) {
-      return;
-    }
+    // if ((event.target as HTMLElement).closest('button')) {
+    //   return;
+    // }
     this.filesService.setCurrentFile(file);
     this.router.navigate(['/files/file-details', file._id]);
   }
 
   onBuyAndDownload(file: CustomFileModel, event: Event): void {
-    this.loaderService.show();
-    if (file.price > 0) {
-      const dialogRef = this.dialog.open(CheckoutComponent, {
-        width: '400px',
-        disableClose: true,
-        data: { file, name: '', email: '', purpose: 'pay', contact: '' }
-      });
-      // this.dialog.open(SigninComponent, {
-      //   width: '400px',
-      //   disableClose: true,
-      //   panelClass: 'custom-dialog-container'
-      // });
+    this.openFileDetails(file, event);
+    // this.loaderService.show();
+    // if (file.price > 0) {
+    //   const dialogRef = this.dialog.open(CheckoutComponent, {
+    //     width: '400px',
+    //     disableClose: true,
+    //     data: { file, name: '', email: '', purpose: 'pay', contact: '' }
+    //   });
+    //   // this.dialog.open(SigninComponent, {
+    //   //   width: '400px',
+    //   //   disableClose: true,
+    //   //   panelClass: 'custom-dialog-container'
+    //   // });
 
-      dialogRef.afterClosed().subscribe(result => {
-        console.log('The dialog was closed');
-      });
-    } else {
-      this.filesService.downloadFile(file.filename, 'file');
-      console.log('Downloading the file...');
-    }
-    this.loaderService.hide();
-    event.stopPropagation();
+    //   dialogRef.afterClosed().subscribe(result => {
+    //     console.log('The dialog was closed');
+    //   });
+    // } else {
+    //   this.filesService.downloadFile(file.filename, 'file');
+    //   console.log('Downloading the file...');
+    // }
+    // this.loaderService.hide();
+    // event.stopPropagation();
   }
 
   loadPreviews(): void {
     this.files.forEach(file => {
-      file.previewUrl = this.filesService.getPreviewUrl(file.filename);
+      file.previewUrl = 'assets/loading-placeholder.svg'; // Placeholder image during loading
+      file.previewUrl = this.filesService.getPreviewUrl(file.filename) || 'assets/defaultpreview/Untitled-1.png';
+
     });
   }
+  
 
   onImageLoad(file: CustomFileModel): void {
     console.log(`Image loaded for file: ${file.originalfilename}`);
@@ -218,4 +251,3 @@ export class AvailableFilesComponent implements OnInit {
     file.previewUrl = 'assets/defaultpreview/Untitled-1.png'; // Placeholder image in case of error
   }
 }
-

@@ -2,16 +2,15 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { OrderResponse, PaymentDetails, VerificationResult, VerifyPaymentDetails } from '../../../shared/models/payment/payment.model';
-// import { environment } from '../../environments/environment';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentService {
-  // private apiUrl = environment.apiUrl;
 
-
-  private apiUrl = 'http://localhost:3000/api/v1/payment';
+  private apiUrlEnv = environment.apiUrl;
+  private readonly apiUrl = `${this.apiUrlEnv}/payment`;
 
   constructor(private http: HttpClient) {}
 

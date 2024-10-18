@@ -4,6 +4,14 @@ Base styles
 body {
   font-family: 'Poppins', sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
+  /* margin: 0px;
+  padding: 0px; */
+
+}
+.body-handler{
+  overflow-x: hidden !important;
+  margin: 0px !important;
+
 }
 
 .blur-background {

@@ -3,12 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { CustomFileModel } from '../../../shared/models/custom-file/custom-file.model';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FilesService {
-  private readonly apiUrl = 'http://localhost:3000/api/v1/file';
+  private apiUrlEnv = environment.apiUrl;
+  private readonly apiUrl = `${this.apiUrlEnv}/file`;
   private currentFile: CustomFileModel | null = null;
 
   constructor(private http: HttpClient) { }

@@ -8,22 +8,27 @@
     </button>
     <nav class="nav" [ngClass]="{ 'active': menuOpen }">
       <ul>
-        <li><a routerLink="" (click)="closeMenu()">Home</a></li>
-        <li><a routerLink="about" (click)="closeMenu()">About</a></li>
-        <li><a routerLink="services" (click)="closeMenu()">Services</a></li>
-        <li><a routerLink="contact" (click)="closeMenu()">Contact me</a></li>
-        <li class="mobile-only"><a (click)="register()">Sign Up</a></li>
-        <li class="mobile-only"><a (click)="login()">Sign In</a></li>
+        
+        <li><a mat-button routerLink="/" routerLinkActive="active-link" (click)="closeMenu()">Home</a></li>
+        <!-- <li><a routerLink="" (click)="closeMenu()">Home</a></li> -->
+        <li><a mat-button routerLinkActive="active-link" routerLink="about" (click)="closeMenu()">About</a></li>
+        <li><a mat-button routerLinkActive="active-link" routerLink="services" (click)="closeMenu()">Services</a></li>
+        <li><a mat-button routerLinkActive="active-link" routerLink="contact" (click)="closeMenu()">Contact me</a></li>
+        <li class="mobile-only"><a mat-button (click)="register()">Sign Up</a></li>
+        <li class="mobile-only"><a mat-button (click)="login()">Sign In</a></li>
         <li class="mobile-only"><a (click)="toggleTheme()">
-          <i [class]="isDarkMode ? 'fas fa-moon' : 'fas fa-sun'"></i> Toggle Theme
+          <i [class]="isDarkMode ? 'fas fa-moon' : 'fas fa-sun'"></i>
         </a></li>
       </ul>
     </nav>
     
     <!-- These buttons will be visible on desktop but hidden on mobile -->
     <div class="actions desktop-only">
-      <button class="btn primary" (click)="register()">Sign Up</button>
-      <button class="btn secondary" (click)="login()">Sign In</button>
+      <!-- <button class="btn primary" (click)="register()">Sign Up</button>
+      <button class="btn secondary" (click)="login()">Sign In</button> -->
+      <button class="btn primary" mat-button (click)="register()">Sign Up</button>
+    <button class="btn secondary" mat-button (click)="login()">Sign In</button>
+
       <button class="btn toggle-theme" (click)="toggleTheme()">
         <i [class]="isDarkMode ? 'fas fa-moon' : 'fas fa-sun'"></i>
       </button>

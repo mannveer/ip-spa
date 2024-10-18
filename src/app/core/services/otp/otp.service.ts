@@ -5,14 +5,14 @@ import { catchError } from 'rxjs/operators';
 import { OtpResponse, SendOtpRequest, VerifyOtpRequest } from '../../../shared/models/otp/otp.model';
 import { VerificationResult } from '../../../shared/models/payment/payment.model';
 import { AuthService } from '../auth/auth.service';
-// import { environment } from '../../environments/environment';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OtpService {
-  // private apiUrl = environment.apiUrl;
-  private apiUrl = "http://localhost:3000/api/v1/otp";
+  private apiUrlEnv = environment.apiUrl;
+  private apiUrl = `${this.apiUrlEnv}/otp`;
 
   constructor(private http: HttpClient, private authservice:AuthService) {}
 

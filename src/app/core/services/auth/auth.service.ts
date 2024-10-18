@@ -3,12 +3,14 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TokenService } from './token.service';
 import { tap } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private API_URL = 'http://localhost:3000/api/v1/otp';
+  private apiUrlEnv = environment.apiUrl;
+  private API_URL = `${this.apiUrlEnv}/otp`;
 
   constructor(private http: HttpClient, private tokenService: TokenService) { }
 

@@ -1,9 +1,17 @@
 <div class="item-list-popup" *ngIf="isVisible">
-  <div class="popup-content">
-    <button class="close-button" (click)="closePopup()">×</button>
-    <div class="image-list">
-      <div class="image-item" *ngFor="let image of images">
-        <img [src]="image.url" [alt]="image.alt">
+  <div class="popup-overlay">
+    <div class="popup-content">
+      <mat-toolbar color="primary" class="popup-header">
+        <span>Samples</span>
+        <span class="spacer"></span>
+        <button mat-icon-button class="close-button" (click)="closePopup()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-toolbar>
+      <div class="image-list">
+        <mat-card class="image-item" *ngFor="let image of images">
+          <img mat-card-image [src]="image.url" [alt]="image.alt">
+        </mat-card>
       </div>
     </div>
   </div>

@@ -4,11 +4,24 @@ import { RouterModule } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { SignupComponent } from '../../auth/signup/signup.component';
 import { SigninComponent } from '../../auth/signin/signin.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule,RouterModule],
+  imports: [CommonModule,RouterModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatListModule
+  ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })

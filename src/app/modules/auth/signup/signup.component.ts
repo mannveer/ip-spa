@@ -1,9 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component, Renderer2 } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -18,7 +16,8 @@ import { MatIcon } from '@angular/material/icon';
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatIcon
+    MatIcon,
+    CommonModule
   ],
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css'],

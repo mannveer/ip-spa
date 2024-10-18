@@ -1,8 +1,9 @@
 /* Ensure the entire page takes up at least the full height of the viewport */
 html, body {
     height: 100%;
-    margin: 0;
     font-family: 'Poppins', sans-serif;
+    overflow-x: hidden !important;
+    margin: 0px !important;
 }
 
 /* Make the app component a flex container */

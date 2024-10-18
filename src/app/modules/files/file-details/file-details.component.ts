@@ -10,30 +10,33 @@ import { LoaderService } from '../../../core/services/loader/loader.service';
 import { LoaderComponent } from "../../../core/components/loader/loader.component";
 import { trigger, transition, query, style, stagger, animate } from '@angular/animations';
 import { firstValueFrom } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { FileZoomDialogComponent } from '../../../core/components/file-zoom-dialog/file-zoom-dialog.component';
 
 declare var Razorpay: any;
 @Component({
   selector: 'app-file-details',
-  standalone: true,
-  imports: [CommonModule, LoaderComponent],
   templateUrl: './file-details.component.html',
-  styleUrl: './file-details.component.css',
-  animations: [
-    trigger('fadeInStagger', [
-      transition('* => *', [ // This transition applies to any change in state
-        query(':enter', [ // :enter is a shorthand for void => *
-          style({ opacity: 0 }), // Initial state of new elements
-          stagger('100ms', [ // Stagger the animations, 100ms apart
-            animate('600ms ease-out', style({ opacity: 1 })), // Final state of elements
-          ]),
-        ], { optional: true }) // This is necessary because Angular throws an error if it can't find any elements
-      ]),
-    ]),
-  ]
+  styleUrls: ['./file-details.component.css'],
+  standalone: true,
+  imports: [CommonModule, LoaderComponent,
+    MatButtonModule,
+    MatDialogModule,
+    MatCardModule,
+    MatProgressSpinnerModule,
+    MatIconModule,
+    MatSnackBarModule
+  ],
+  
 })
 export class FileDetailsComponent {
   selectedImage: any = null;
-
+  isLoading1: boolean = true;
   file:any ;
   fileId : string | null = null;
   constructor(private route: ActivatedRoute,
@@ -41,11 +44,19 @@ export class FileDetailsComponent {
     private router : Router,
     private fes : FileExtractionService,
     private dialog : MatDialog,
-    private loaderService: LoaderService
+    public loaderService: LoaderService
   ) {
     }
   zoomImage(image: any) {
     this.selectedImage = image;
+  }
+  openZoomDialog(image: any) {
+    this.dialog.open(FileZoomDialogComponent, {
+      data: {
+        imageSrc: image.src
+      },
+      panelClass: 'zoom-dialog-panel'
+    });
   }
 
   closeZoom() {
@@ -56,6 +67,7 @@ export class FileDetailsComponent {
   }
 
   async ngOnInit():Promise<void> {
+    this.isLoading1 = true;
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         // If the page is refreshed or the route changes, get fileName from router
@@ -70,9 +82,9 @@ export class FileDetailsComponent {
     }
     else{
       this.file = this.fileService.getCurrentFile();
-    }
-    
-    this.dummyData();
+    }    
+    this.isLoading1 = false;
+    // this.dummyData();
 
     if (!this.file) {
       this.router.navigate(['/not-found']);
@@ -87,13 +99,15 @@ export class FileDetailsComponent {
           res.data.forEach((element: any) => {
             this.file.sampleFiles.push({src:element});
           });
+          console.log('Sample files:', this.file.sampleFiles);
+          this.loaderService.hide();
       },
       error: (error: any) => {
         console.error('An error occurred:', error);
+        this.loaderService.hide();
       }
     });
 
-    this.loaderService.hide();
   }
 
   async loadFileInfo(fileId: string): Promise<void> {
@@ -104,7 +118,6 @@ export class FileDetailsComponent {
       console.error('An error occurred:', error);
     }
   }
-  
 
   dummyData(){
     const temp : any = [
@@ -183,4 +196,5 @@ export class FileDetailsComponent {
   contactMe() {
     this.router.navigate(['/contact']);
   }
+  
 }

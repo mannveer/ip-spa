@@ -9,7 +9,7 @@
       <mat-form-field appearance="fill">
         <mat-label>Name</mat-label>
         <input matInput formControlName="name" placeholder="Enter your name" required>
-        <mat-error *ngIf="signupForm.get('name').invalid && signupForm.get('name').touched">
+        <mat-error *ngIf="signupForm.get('name')?.invalid && signupForm.get('name')?.touched">
           Name is required
         </mat-error>
       </mat-form-field>
@@ -17,7 +17,7 @@
       <mat-form-field appearance="fill">
         <mat-label>Email</mat-label>
         <input matInput formControlName="email" placeholder="Enter your email" required>
-        <mat-error *ngIf="signupForm.get('email').invalid && signupForm.get('email').touched">
+        <mat-error *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched">
           Please enter a valid email
         </mat-error>
       </mat-form-field>
@@ -28,7 +28,7 @@
         <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
           <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
-        <mat-error *ngIf="signupForm.get('password').invalid && signupForm.get('password').touched">
+        <mat-error *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched">
           Password is required (min 6 characters)
         </mat-error>
       </mat-form-field>

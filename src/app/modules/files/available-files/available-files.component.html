@@ -1,98 +1,106 @@
-
 <div class="homepage">
-  <!-- <router-outlet></router-outlet> -->
-
-  <div class="page-heading">
-    Files available as on {{ currentDate | date: 'MMMM d, y' }}
-  </div>
-
-  <div class="search-container">
-    <div class="search-bar">
-      <input
-        type="text"
-        placeholder="Search files..."
-        [(ngModel)]="searchQuery"
-        (input)="onSearchInput($event)"
-        (focus)="showSuggestions = true"
-        (blur)="hideSuggestions()"
-        aria-label="Search files"
-      />
-      <button *ngIf="searchQuery" class="icon-button clear-icon" (click)="clearSearch()" aria-label="Clear search">
-        <mat-icon>close</mat-icon>
-      </button>
-      <button class="icon-button search-icon" aria-label="Search">
-        <mat-icon>search</mat-icon>
-      </button>
-      <button class="icon-button filter-button" (click)="toggleFilters()" aria-label="Filter files">
-        <mat-icon>filter_list</mat-icon>
-      </button>
+  <mat-toolbar color="primary" class="mat-elevation-z4">
+    <span>Available Files ({{ currentDate | date: 'MMMM d, y' }})</span>
+  </mat-toolbar>
+  
+  <div class="search-filter-container">
+    <!-- Search Box -->
+    <div class="search-container">
+      <mat-form-field appearance="outline" class="search-input">
+        <mat-label>Search files</mat-label>
+        <input
+          matInput
+          [(ngModel)]="searchQuery"
+          (input)="onSearchInput($event)"
+          [matAutocomplete]="auto"
+          (focus)="showSuggestions = true"
+          (blur)="hideSuggestions()"
+        />
+        <button *ngIf="searchQuery" mat-icon-button matSuffix aria-label="Clear" (click)="clearSearch()">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-icon matPrefix>search</mat-icon>
+  
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectSuggestion($event.option.value)">
+          <mat-option *ngFor="let suggestion of filteredFiles" [value]="suggestion">
+            {{ suggestion.originalfilename }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
     </div>
-    <div class="suggestions" [@suggestionsState]="showSuggestions ? 'visible' : 'hidden'">
-      <ul>
-        <li *ngFor="let file of filteredFiles" (click)="selectSuggestion(file)">
-          {{ file.originalfilename }}
-        </li>
-      </ul>
-    </div>
-
-    <!-- Filter Section with Animation -->
-    <div class="filter-container" [@filterState]="showFilters ? 'expanded' : 'collapsed'">
-      <div class="filter-header">
-        <h3>Filter Files</h3>
-        <button class="apply-button" (click)="applyFilters()">Apply Filters</button>
+  
+    <!-- Filter Section -->
+    <mat-expansion-panel class="filters-panel" (opened)="showFilters = true" (closed)="showFilters = false">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Filter Options</mat-panel-title>
+        <mat-panel-description>Refine your search</mat-panel-description>
+      </mat-expansion-panel-header>
+  
+      <div class="filters">
+        <mat-form-field class="filter-item">
+          <mat-label>Price</mat-label>
+          <mat-select [(ngModel)]="filterCriteria.price">
+            <mat-option value="">All</mat-option>
+            <mat-option *ngFor="let price of priceOptions" [value]="price">{{ price | currency: 'INR' }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+  
+        <mat-form-field class="filter-item">
+          <mat-label>Type</mat-label>
+          <mat-select [(ngModel)]="filterCriteria.type">
+            <mat-option value="">All</mat-option>
+            <mat-option *ngFor="let type of typeOptions" [value]="type">{{ type }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+  
+        <mat-form-field class="filter-item">
+          <mat-label>Date Added</mat-label>
+          <mat-select [(ngModel)]="filterCriteria.dateAdded">
+            <mat-option value="">All</mat-option>
+            <mat-option *ngFor="let date of dateOptions" [value]="date">{{ date | date }}</mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
-      <div class="filter-options">
-        <div class="filter-item">
-          <label>Price:</label>
-          <select [(ngModel)]="filterCriteria.price">
-            <option value="">All</option>
-            <option *ngFor="let price of priceOptions" [value]="price">{{ price | currency: 'INR' }}</option>
-          </select>
-        </div>
-        <div class="filter-item">
-          <label>Type:</label>
-          <select [(ngModel)]="filterCriteria.type">
-            <option value="">All</option>
-            <option *ngFor="let type of typeOptions" [value]="type">{{ type }}</option>
-          </select>
-        </div>
-        <div class="filter-item">
-          <label>Date Added:</label>
-          <select [(ngModel)]="filterCriteria.dateAdded">
-            <option value="">All</option>
-            <option *ngFor="let date of dateOptions" [value]="date">{{ date | date }}</option>
-          </select>
-        </div>
-        <div class="filter-item">
-          <label>Design Type:</label>
-          <select [(ngModel)]="filterCriteria.designType">
-            <option value="">All</option>
-            <option *ngFor="let designType of designTypeOptions" [value]="designType">{{ designType }}</option>
-          </select>
-        </div>
+  
+      <div>
+        <button mat-raised-button color="accent" (click)="applyFilters()">Apply Filters</button>
       </div>
-    </div>
+    </mat-expansion-panel>
   </div>
+  
 
   <div class="file-list">
-    <div class="file-item" *ngFor="let file of filteredFiles" (click)="openFileDetails(file, $event)">
+    <div *ngFor="let file of filteredFiles" class="file-item" (click)="openFileDetails(file, $event)">
       <div class="file-preview">
-        <img
-          [src]="file.previewUrl"
-          alt="{{ file.originalfilename }}"
-          (load)="onImageLoad(file)"
-          (error)="onImageError(file)"
-        />
+        <div *ngIf="!file.previewUrl; else imageLoaded" class="loading-placeholder">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+        <ng-template #imageLoaded>
+          <img [src]="file.previewUrl" alt="{{ file.originalfilename }}" (load)="onImageLoad(file)" (error)="onImageError(file)" />
+        </ng-template>
       </div>
       <div class="file-info">
         <span class="file-name">{{ file.originalfilename }}</span>
-        <!-- <span class="file-type">{{ file.mimetype }}</span> -->
-        <span class="file-type">{{ file.price !== 0 ? (file.price | currency:'INR') : 'Free' }}</span>
-            </div>
-      <button class="buy-button" (click)="onBuyAndDownload(file, $event); $event.stopPropagation()">
+        <span class="file-type">{{ file.price !== 0 ? (file.price | currency: 'INR') : 'Free' }}</span>
+      </div>
+      <button mat-raised-button color="accent" class="buy-button" (click)="onBuyAndDownload(file, $event)">
         {{ file.price === 0 ? 'Download' : 'Buy and download' }}
       </button>
     </div>
+
+    <!-- Placeholder items while loading -->
+<ng-container *ngIf="isLoading && files.length === 0">
+  <div style="opacity: 0.2;" class="file-item" *ngFor="let i of [1, 2, 3]">
+      <div class="file-preview loading-placeholder">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+      <div class="file-info">
+        <span class="file-name">Loading...</span>
+        <span class="file-type">...</span>
+      </div>
+    </div>
+  </ng-container>
   </div>
+
   <router-outlet></router-outlet>
 </div>

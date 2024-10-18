@@ -1,7 +1,15 @@
+<h1 style="
+text-align: center;
+font-family: monospace;
+text-decoration: underline;
+">This is a dummy version of ipriyanka.com</h1>
+
 <section class="featured-work">
   <div class="container">
     <h2 class="section-title">Explore My Projects</h2>
-    <p class="section-subtitle">Explore my latest and most impactful design projects, spanning multiple categories.</p>
+    <p class="section-subtitle">
+      Explore my latest and most impactful design projects, spanning multiple categories.
+    </p>
 
     <div class="filters">
       <button
@@ -21,28 +29,50 @@
         </button>
       </ng-container>
     </div>
-
-    <div class="project-grid">
-      <div class="project-card" *ngFor="let project of displayedProjects">
-        <a [routerLink]="project.projectUrl" attr.aria-label="{{ project.title }}">
-          <img
-            [src]="project.imageUrl"
-            [alt]="project.title"
-            class="project-image"
-            (error)="project.imageUrl = 'assets/placeholder.png'"
-          />
-          <div class="overlay">
-            <h3 class="project-title">{{ project.title }}</h3>
-            <p class="project-description">{{ project.description }}</p>
-            <span class="project-category">{{ project.category }}</span>
-          </div>
-        </a>
-      </div>
-    </div>
+    
+    <mat-grid-list cols="4" rowHeight="350px" gutterSize="20px">
+      <mat-grid-tile *ngFor="let project of displayedProjects">
+        <mat-card class="project-card" [ngClass]="{ 'unavailable': !project.available }">
+          <a 
+            [routerLink]="project.projectUrl" 
+            attr.aria-label="{{ project.title }}"
+            [class.disabled]="!project.available" 
+            [attr.tabindex]="project.available ? null : -1"
+          >
+            <img
+              mat-card-image
+              [src]="project.imageUrl"
+              [alt]="project.title"
+              (error)="project.imageUrl = 'assets/placeholder.png'"
+            />
+            <mat-card-content>
+              <h3 mat-card-title>{{ project.title }}</h3>
+              <p mat-card-subtitle>{{ project.description }}</p>
+              <mat-chip-listbox>
+                <mat-chip color="primary">{{ project.category }}</mat-chip>
+              </mat-chip-listbox>
+              <p class="availability-message">
+                {{ project.available ? 'Available' : 'Currently Unavailable' }}
+              </p>
+            </mat-card-content>
+          </a>
+        </mat-card>
+      </mat-grid-tile>
+    </mat-grid-list>
 
     <div class="pagination">
-      <button class="pagination-btn" (click)="loadPreviousPage()" [disabled]="currentPage === 0">Previous</button>
       <button
+        mat-raised-button
+        color="primary"
+        class="pagination-btn"
+        (click)="loadPreviousPage()"
+        [disabled]="currentPage === 0"
+      >
+        Previous
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
         class="pagination-btn"
         (click)="loadNextPage()"
         [disabled]="(currentPage + 1) * projectsPerPage >= getFilteredProjects().length"
@@ -51,6 +81,6 @@
       </button>
     </div>
 
-    <a routerLink="/about" class="btn-primary">View Full Portfolio</a>
+    <a routerLink="/about" mat-raised-button color="accent" class="btn-primary">View Full Portfolio</a>
   </div>
 </section>

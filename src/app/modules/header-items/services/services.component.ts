@@ -3,11 +3,16 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { sample } from 'rxjs';
 import { ItemListComponent } from '../../../core/components/item-list/item-list.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-services',
   standalone: true,
-  imports: [CommonModule,ItemListComponent],
+  imports: [CommonModule,ItemListComponent,
+    MatCardModule,
+    MatButtonModule
+  ],
   templateUrl: './services.component.html',
   styleUrl: './services.component.css'
 })

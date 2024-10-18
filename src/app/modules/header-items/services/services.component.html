@@ -8,13 +8,13 @@
     </p>
   </div>
   <div class="service-list">
-    <div class="service-item" *ngFor="let service of services">
+    <mat-card class="service-item" *ngFor="let service of services">
       <h2>{{ service.title }}</h2>
       <p>{{ service.description }}</p>
       <div class="button-container">
-        <button class="view-samples-button" (click)="viewSamples(service)" [disabled]="service.sampleFiles <= 0">View Samples</button>
+        <button mat-button class="view-samples-button" (click)="viewSamples(service)" [disabled]="service.sampleFiles <= 0">View Samples</button>
       </div>
-    </div>
+    </mat-card>
   </div>
   <app-item-list [isVisible]="showSamples" (close)="closeSamples()"></app-item-list>
 </div>

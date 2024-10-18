@@ -1,21 +1,34 @@
 <div class="file-details-comp">
-  <div class="page-heading">
-    <button class="back-button" (click)="goBack()"> < Back</button>
-    File Details
-  </div>
-  <div class="file-details-container">
-    <div class="preview-section">
-      <h2>Preview Images</h2>
-      <app-loader></app-loader>
-      <div *ngIf="file.sampleFiles?.length; else noImages" class="preview-images" @fadeInStagger>
-        <div class="image-card" *ngFor="let image of file.sampleFiles" (click)="zoomImage(image)">
-          <img [src]="image.src" alt="Preview Image">
+<!-- <div class="page-heading-div"> -->
+  <mat-card class="page-heading">
+    <button mat-icon-button color="primary" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <span class="page-title">File Details</span>
+  </mat-card>
+<!-- </div> -->
+
+  <mat-card class="file-details-container">
+    <!-- Preview Section -->
+    <h2>Preview Images</h2>
+    <!-- <mat-spinner *ngIf="loaderService.isLoading | async"></mat-spinner> -->
+
+      <div class="preview-images" *ngIf="loaderService.isLoading | async">
+        <mat-card style="opacity: 0.1;" *ngFor="let i of [1, 2, 3]">
+              <mat-spinner diameter="120"></mat-spinner>
+          </mat-card>
         </div>
-      </div>
-      <ng-template #noImages>
-        <p>No preview images available.</p>
-      </ng-template>
+
+    <div *ngIf="file.sampleFiles?.length; else noImages" class="preview-images">
+      <mat-card *ngFor="let image of file.sampleFiles" class="image-card" (click)="openZoomDialog(image)">
+        <img mat-card-image [src]="image.src" alt="Preview Image" loading="lazy">
+      </mat-card>
     </div>
+    <ng-template #noImages>
+      <p>No preview images available.</p>
+    </ng-template>
+
+    <!-- File Info Section -->
     <div class="file-info">
       <p><strong>Title:</strong> {{ file.title }}</p>
       <p><strong>Filename:</strong> {{ file.originalfilename }}</p>
@@ -23,22 +36,21 @@
       <p><strong>Size:</strong> {{ file.size }}</p>
       <p><strong>Description:</strong> {{ file.description }}</p>
       <p *ngIf="file.price > 0"><strong>Price:</strong> {{ file.price | currency:"INR" }}</p>
+
+      <!-- Action Buttons -->
       <div class="button-group">
-        <button class="btn action-button buy-button" (click)="handleActionClick()">
+        <button mat-raised-button color="primary" (click)="handleActionClick()">
           {{ file.price > 0 ? 'Buy Now' : 'Download' }}
         </button>
-        <button *ngIf="file.price > 0" class="btn action-button verify-button" (click)="verifyPayment()">
+        <button *ngIf="file.price > 0" mat-stroked-button color="accent" (click)="verifyPayment()">
           Verify Payment
         </button>
-        <button class="btn action-button contact-button" (click)="contactMe()">
-          Contact Me
-        </button>
+        <button mat-stroked-button color="warn" (click)="contactMe()">Contact Me</button>
       </div>
     </div>
-  </div>
-
-  <!-- Zoom Modal -->
-  <div *ngIf="selectedImage" class="zoom-modal" (click)="closeZoom()">
-    <img [src]="selectedImage.src" alt="Zoomed Image">
+  </mat-card>
+  
+  <div *ngIf="isLoading1">
+    <app-loader></app-loader>
   </div>
 </div>

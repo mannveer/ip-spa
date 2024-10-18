@@ -59,11 +59,23 @@
 }
 
 .nav a {
-  color: #511717;
+  /* color: #511717;
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease; */
+
+
+    color: #1d1d1d;
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+
+    &.active-link, &:hover {
+      color: #5d79f3;
+    }
 }
+
 
 .nav a:hover {
   color: #a0a6f6;
@@ -81,6 +93,7 @@
   font-family: 'Poppins', sans-serif;
   border-radius: 20px;
   transition: background-color 0.3s ease, color 0.3s ease;
+  color: #ffffff !important;
 }
 
 .primary {
@@ -90,6 +103,7 @@
 
 .primary:hover {
   background-color: #c2001c;
+  color: #ffffff;
 }
 
 .secondary {
@@ -99,6 +113,7 @@
 
 .secondary:hover {
   background-color: #5a6268;
+  color: #ffffff;
 }
 
 .toggle-theme {
