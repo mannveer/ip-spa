@@ -1,4 +1,4 @@
 
 export const constant = {
-    otpexpiry: 180
+    otpexpiry: 60
 }

@@ -4,8 +4,9 @@ import rzorpay from 'razorpay';
 declare var Razorpay: any;
 
 @Component({
-  selector: 'app-payment',
-  templateUrl: './payment.component.html'
+    selector: 'app-payment',
+    templateUrl: './payment.component.html',
+    standalone: false
 })
 export class PaymentComponent {
   Razorpay: any = rzorpay;

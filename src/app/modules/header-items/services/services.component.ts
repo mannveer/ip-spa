@@ -7,14 +7,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-  selector: 'app-services',
-  standalone: true,
-  imports: [CommonModule,ItemListComponent,
-    MatCardModule,
-    MatButtonModule
-  ],
-  templateUrl: './services.component.html',
-  styleUrl: './services.component.css'
+    selector: 'app-services',
+    imports: [CommonModule, ItemListComponent,
+        MatCardModule,
+        MatButtonModule
+    ],
+    templateUrl: './services.component.html',
+    styleUrl: './services.component.css'
 })
 export class ServicesComponent {
 

@@ -8,19 +8,18 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-signin',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    FormsModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIcon,
-    CommonModule
-  ],
-  templateUrl: './signin.component.html',
-  styleUrl: './signin.component.css'
+    selector: 'app-signin',
+    imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIcon,
+        CommonModule
+    ],
+    templateUrl: './signin.component.html',
+    styleUrl: './signin.component.css'
 })
 export class SigninComponent {
   signinForm: FormGroup;

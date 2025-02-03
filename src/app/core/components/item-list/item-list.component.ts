@@ -6,11 +6,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
-  selector: 'app-item-list',
-  standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatCardModule,    MatToolbarModule,  ],
-  templateUrl: './item-list.component.html',
-  styleUrls: ['./item-list.component.css']
+    selector: 'app-item-list',
+    imports: [CommonModule, MatButtonModule, MatIconModule, MatCardModule, MatToolbarModule,],
+    templateUrl: './item-list.component.html',
+    styleUrls: ['./item-list.component.css']
 })
 export class ItemListComponent implements OnChanges {
   @Input() isVisible: boolean = false;

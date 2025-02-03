@@ -14,7 +14,7 @@
     <!-- <mat-spinner *ngIf="loaderService.isLoading | async"></mat-spinner> -->
 
       <div class="preview-images" *ngIf="loaderService.isLoading | async">
-        <mat-card style="opacity: 0.1;" *ngFor="let i of [1, 2, 3]">
+        <mat-card class="spinner-class" *ngFor="let i of [1, 2, 3]">
               <mat-spinner diameter="120"></mat-spinner>
           </mat-card>
         </div>
@@ -39,10 +39,10 @@
 
       <!-- Action Buttons -->
       <div class="button-group">
-        <button mat-raised-button color="primary" (click)="handleActionClick()">
+        <button mat-raised-button style="background-color: black; color: white;" (click)="handleActionClick()">
           {{ file.price > 0 ? 'Buy Now' : 'Download' }}
         </button>
-        <button *ngIf="file.price > 0" mat-stroked-button color="accent" (click)="verifyPayment()">
+        <button *ngIf="file.price > 0" mat-stroked-button color="primary" (click)="verifyPayment()">
           Verify Payment
         </button>
         <button mat-stroked-button color="warn" (click)="contactMe()">Contact Me</button>

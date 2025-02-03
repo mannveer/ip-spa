@@ -18,20 +18,19 @@ interface Project {
 }
 
 @Component({
-  selector: 'app-featured-work',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    MatCardModule,
-    MatButtonModule,
-    MatGridListModule,
-    MatPaginatorModule,
-    MatChipsModule,
-    MatDividerModule,
-  ],
-  templateUrl: './featured-work.component.html',
-  styleUrls: ['./featured-work.component.css'],
+    selector: 'app-featured-work',
+    imports: [
+        CommonModule,
+        RouterModule,
+        MatCardModule,
+        MatButtonModule,
+        MatGridListModule,
+        MatPaginatorModule,
+        MatChipsModule,
+        MatDividerModule,
+    ],
+    templateUrl: './featured-work.component.html',
+    styleUrls: ['./featured-work.component.css']
 })
 export class FeaturedWorkComponent implements OnInit {
   projects: Project[] = [];

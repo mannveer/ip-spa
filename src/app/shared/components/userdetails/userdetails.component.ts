@@ -3,11 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-userdetails',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './userdetails.component.html',
-  styleUrl: './userdetails.component.css'
+    selector: 'app-userdetails',
+    imports: [CommonModule, ReactiveFormsModule],
+    templateUrl: './userdetails.component.html',
+    styleUrl: './userdetails.component.css'
 })
 export class UserdetailsComponent implements OnInit {
   user = new FormGroup({

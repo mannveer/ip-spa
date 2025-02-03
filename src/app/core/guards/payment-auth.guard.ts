@@ -1,30 +1,41 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
-import { PaymentService } from '../services/payment/payment.service'; // Ensure this path is correct
-import { Observable } from 'rxjs';
+import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { UserFileInfoService } from '../services/user-file-info/user-file-info.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentAuthGuard implements CanActivate {
 
-  constructor(private paymentService: PaymentService, private router: Router) {}
+  constructor(private userfileinfoservice: UserFileInfoService, private router: Router) {}
 
-  canActivate(): Observable<boolean> {
-    return this.paymentService.isPaymentSuccessful().pipe(
+  canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
+    const fileId = route.params['fileId']; 
+    const userEmail = localStorage.getItem('userEmail'); 
+
+    if (!fileId || !userEmail) {
+      console.error('Missing fileId or userEmail');
+      this.router.navigate(['/files']); 
+      return of(false);
+    }
+
+    return this.userfileinfoservice.isPaymentSuccessful(fileId, userEmail).pipe(
       map(isSuccessful => {
+        localStorage.removeItem('userEmail');
         if (isSuccessful) {
-          return true; // Payment was successful, allow access to the route
+          return true; 
         } else {
-          this.router.navigate(['/success-receipt']); // Redirect to checkout if payment is not successful
+          this.router.navigate(['/files']); 
           return false;
         }
       }),
       catchError((error) => {
+        localStorage.removeItem('userEmail');
         console.error('Error checking payment status:', error);
-        this.router.navigate(['/files']); // Redirect in case of an error
-        return [false];
+        this.router.navigate(['/files']); 
+        return of(false);
       })
     );
   }

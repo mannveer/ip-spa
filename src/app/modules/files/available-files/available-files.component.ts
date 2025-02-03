@@ -1,11 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ChangeDetectionStrategy, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { CustomFileModel } from '../../../shared/models/custom-file/custom-file.model';
 import { FilesService } from '../../../core/services/files/files.service';
-import { LoaderService } from '../../../core/services/loader/loader.service';
-import { MatDialog } from '@angular/material/dialog';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -13,52 +11,67 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { CheckoutComponent } from '../../payment/checkout/checkout.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { environment } from '../../../../environments/environment';
 
 @Component({
-  selector: 'app-available-files',
-  standalone: true,
-  imports: [
-    CommonModule, 
-    RouterModule, 
-    FormsModule, 
-    MatIconModule, 
-    MatInputModule, 
+    selector: 'app-available-files',
+    imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    MatIconModule,
+    MatInputModule,
     MatSelectModule,
     MatButtonModule,
     MatCardModule,
     MatToolbarModule,
     MatExpansionModule,
-    MatGridListModule,
     MatAutocompleteModule,
-    MatProgressSpinnerModule
-  ],
-  templateUrl: './available-files.component.html',
-  styleUrls: ['./available-files.component.scss']
+    MatProgressSpinnerModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatCheckboxModule,
+],
+    providers: [provideNativeDateAdapter()],
+    templateUrl: './available-files.component.html',
+    styleUrls: ['./available-files.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AvailableFilesComponent implements OnInit {
+
   searchSuggestions: CustomFileModel[] = [];
-isLoading: boolean = true; // Loading state for files
+  isLoading: boolean = true; 
   currentDate: Date = new Date();
   files: CustomFileModel[] = [];
   filteredFiles: CustomFileModel[] = [];
   searchQuery: string = '';
   showSuggestions: boolean = false;
   showFilters: boolean = false;
-
-  filterCriteria = { price: '', type: '', dateAdded: '', designType: '' };
+  // @Input({ transform: Boolean }) hideSingleSelectionIndicator = false;
+  selectedDesignType: string = '';
+  filterCriteria:any = {
+    price: [],
+    type: [],
+    dateRange: { start: null, end: null },
+  };
   priceOptions: number[] = [];
   typeOptions: string[] = [];
-  dateOptions: string[] = [];
-  designTypeOptions: string[] = [];
-
+  noFiles: boolean = false;
+  readonly addedDateRange = new FormGroup({
+    start: new FormControl(),
+    end: new FormControl(),
+  });
+  
   constructor(
     private router: Router,
-    private dialog: MatDialog,
-    private loaderService: LoaderService,
     private filesService: FilesService
   ) {}
 
@@ -66,28 +79,37 @@ isLoading: boolean = true; // Loading state for files
     this.filesService.getFilesInfo().subscribe({
       next: (filesData: CustomFileModel[]) => {
         this.files = filesData;
-        this.filteredFiles = filesData; // Initialize filteredFiles with all files
+        this.filteredFiles = filesData;
+        if(!environment.cloudinary)
         this.loadPreviews();
-        this.populateFilterOptions(); // Populate filter dropdowns
+        this.populateFilterOptions();
       },
       error: (error: any) => {
+        this.noFiles = true;
         console.error('An error occurred:', error);
       }
     });
 
     // this.dummyData()
+    if(this.files.length === 0){
+      this.noFiles = true;
+    }
 
   }
-  
+
+  goBack() {
+    this.router.navigate(['/']);
+  }
   fetchFiles(): void {
     this.isLoading = true;
     this.filesService.getFilesInfo().subscribe({
       next: (filesData: CustomFileModel[]) => {
         this.files = filesData;
-        this.filteredFiles = filesData; // Initialize filteredFiles with all files
+        this.filteredFiles = filesData;
+        if(!environment.cloudinary)
         this.loadPreviews();
-        this.populateFilterOptions(); // Populate filter dropdowns
-        this.isLoading = false; // Disable loading state after data is loaded
+        this.populateFilterOptions(); 
+        this.isLoading = false; 
       },
       error: (error: any) => {
         console.error('An error occurred:', error);
@@ -130,29 +152,22 @@ isLoading: boolean = true; // Loading state for files
   ];
 
   this.files = temp;
-  this.filteredFiles = temp; // Initialize filteredFiles with all files
+  this.filteredFiles = temp; 
   this.loadPreviews();
-  this.populateFilterOptions(); // Populate filter dropdowns
+  this.populateFilterOptions();
   }
 
   populateFilterOptions(): void {
     const prices = new Set<number>();
     const types = new Set<string>();
-    const dates = new Set<string>();
-    const designTypes = new Set<string>();
 
     this.files.forEach(file => {
       prices.add(file.price);
       types.add(file.mimetype);
-      const updatedAt = file.updatedAt ? new Date(file.updatedAt) : new Date();
-      dates.add(new Date(updatedAt).toISOString().split('T')[0]);
-      designTypes.add(file.designType);
     });
 
     this.priceOptions = Array.from(prices).sort((a, b) => a - b);
     this.typeOptions = Array.from(types);
-    this.dateOptions = Array.from(dates).sort();
-    this.designTypeOptions = Array.from(designTypes);
   }
 
   toggleFilters(): void {
@@ -165,19 +180,61 @@ isLoading: boolean = true; // Loading state for files
     this.showSuggestions = false;
   }
 
-  applyFilters(): void {
-    this.filteredFiles = this.files.filter(file => {
-      const updatedAt = file.updatedAt ? new Date(file.updatedAt) : new Date();
-      return (
-        (this.filterCriteria.price === '' || file.price === +this.filterCriteria.price) &&
-        (this.filterCriteria.type === '' || file.mimetype === this.filterCriteria.type) &&
-        (this.filterCriteria.dateAdded === '' || new Date(updatedAt).toISOString().split('T')[0] === this.filterCriteria.dateAdded) &&
-        (this.filterCriteria.designType === '' || file.designType === this.filterCriteria.designType)
-      );
+  applyFilters() {
+    this.searchQuery = '';
+    this.filteredFiles = this.files.filter((file) => {
+      // Filter by price
+      const priceFilter =
+        this.filterCriteria.price.length === 0 ||
+        this.filterCriteria.price.includes(file.price === 0 ? 'Free' : file.price);
+
+      // Filter by type
+      const typeFilter =
+        this.filterCriteria.type.length === 0 ||
+        this.filterCriteria.type.includes(file.mimetype);
+
+      // Filter by date range
+      const dateRange = this.addedDateRange.value;
+      const startDate = dateRange.start ? new Date(dateRange.start) : null;
+      const endDate = dateRange.end ? new Date(dateRange.end) : null;
+      const fileDate = new Date(file.updatedAt as Date);
+  
+      const dateFilter =
+        (!startDate || fileDate >= startDate) &&
+        (!endDate || fileDate <= endDate) || (!startDate && !endDate);
+  
+      this.showFilters=false;
+      return priceFilter && typeFilter && dateFilter;
     });
-    this.showFilters = false; // Hide filters after applying
   }
 
+
+  isChecked(filterKey: 'price' | 'type'): boolean {
+    const value = filterKey==='price'?this.priceOptions:this.typeOptions;
+    return value.length>0 && this.filterCriteria[filterKey].length === value.length
+  }
+
+  partiallyComplete(filterKey: 'price' | 'type'): boolean {
+    const value = filterKey==='price'?this.priceOptions:this.typeOptions;
+    return value.length > 0 && this.filterCriteria[filterKey].length > 0 && this.filterCriteria[filterKey].length < value.length
+  }
+
+  updateCheckbox(filterKey: 'price' | 'type',options:any[] ,completed:boolean) {
+    if (completed) {
+      options = filterKey==='price'? options.map(option =>
+        filterKey === 'price' && option === 0 ? 'Free' : option
+      ):options;
+      this.filterCriteria[filterKey] = options;
+    } else {
+      this.filterCriteria[filterKey] = [];
+    }
+  };
+
+
+  onSelectionChange(filterKey: 'price' | 'type', event: any): void {
+      this.filterCriteria[filterKey] = event.value;
+  }
+  
   onSearchInput(event: Event): void {
     const searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
     this.searchSuggestions = this.files.filter(file =>
@@ -188,6 +245,9 @@ isLoading: boolean = true; // Loading state for files
   }
   
 
+  
+
+
   selectSuggestion(file: CustomFileModel): void {
     this.searchQuery = file.originalfilename;
     this.filteredFiles = [file]; // Show only the selected file
@@ -197,7 +257,7 @@ isLoading: boolean = true; // Loading state for files
   hideSuggestions(): void {
     setTimeout(() => {
       this.showSuggestions = false;
-    }, 200); // Delay to allow clicks on suggestions
+    }, 200); 
   }
 
   openFileDetails(file: CustomFileModel, event: Event): void {
@@ -236,9 +296,7 @@ isLoading: boolean = true; // Loading state for files
 
   loadPreviews(): void {
     this.files.forEach(file => {
-      file.previewUrl = 'assets/loading-placeholder.svg'; // Placeholder image during loading
       file.previewUrl = this.filesService.getPreviewUrl(file.filename) || 'assets/defaultpreview/Untitled-1.png';
-
     });
   }
   
