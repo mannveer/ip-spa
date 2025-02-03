@@ -2,13 +2,11 @@ import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { Component } from '@angular/core';
 import { FilesService } from '../../../core/services/files/files.service';
-// import Razorpay from 'razorpay';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { FileExtractionService } from '../../../core/services/file-extraction/file-extraction.service';
 import { CheckoutComponent } from '../../payment/checkout/checkout.component';
 import { LoaderService } from '../../../core/services/loader/loader.service';
 import { LoaderComponent } from "../../../core/components/loader/loader.component";
-import { trigger, transition, query, style, stagger, animate } from '@angular/animations';
 import { firstValueFrom } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -20,19 +18,17 @@ import { FileZoomDialogComponent } from '../../../core/components/file-zoom-dial
 
 declare var Razorpay: any;
 @Component({
-  selector: 'app-file-details',
-  templateUrl: './file-details.component.html',
-  styleUrls: ['./file-details.component.css'],
-  standalone: true,
-  imports: [CommonModule, LoaderComponent,
-    MatButtonModule,
-    MatDialogModule,
-    MatCardModule,
-    MatProgressSpinnerModule,
-    MatIconModule,
-    MatSnackBarModule
-  ],
-  
+    selector: 'app-file-details',
+    templateUrl: './file-details.component.html',
+    styleUrls: ['./file-details.component.css'],
+    imports: [CommonModule, LoaderComponent,
+        MatButtonModule,
+        MatDialogModule,
+        MatCardModule,
+        MatProgressSpinnerModule,
+        MatIconModule,
+        MatSnackBarModule
+    ]
 })
 export class FileDetailsComponent {
   selectedImage: any = null;
@@ -96,6 +92,8 @@ export class FileDetailsComponent {
 
     this.fileService.getSampleFiles(this.file.filename).subscribe({
       next: (res:any) => {
+        if(!this.file.sampleFiles)
+          this.file.sampleFiles = []
           res.data.forEach((element: any) => {
             this.file.sampleFiles.push({src:element});
           });
@@ -113,7 +111,8 @@ export class FileDetailsComponent {
   async loadFileInfo(fileId: string): Promise<void> {
     try {
       const fileData:any = await firstValueFrom(this.fileService.getFileInfo(fileId));
-      this.file = fileData[0];
+      this.file = fileData;
+      // this.file = fileData[0];
     } catch (error) {
       console.error('An error occurred:', error);
     }

@@ -10,11 +10,10 @@ interface File {
 }
 
 @Component({
-  selector: 'app-filetemp',
-  templateUrl: './filetemp.component.html',
-  standalone: true,
-  imports: [CommonModule,RouterModule],
-  styleUrl: './filetemp.component.css'
+    selector: 'app-filetemp',
+    templateUrl: './filetemp.component.html',
+    imports: [CommonModule, RouterModule],
+    styleUrl: './filetemp.component.css'
 })
 export class FiletempComponent {
   currentDate: Date = new Date();

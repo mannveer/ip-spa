@@ -6,36 +6,33 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { PaymentService } from '../../../core/services/payment/payment.service';
 import { OtpService } from '../../../core/services/otp/otp.service';
-import { LoaderComponent } from "../../../core/components/loader/loader.component";
 import { UserFileInfoService } from '../../../core/services/user-file-info/user-file-info.service';
-// import { writeFile } from 'fs';
-import { MatIconModule } from '@angular/material/icon';
+// import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
 import { constant } from '../../../shared/constant';
 import { environment } from '../../../../environments/environment';
 import { firstValueFrom } from 'rxjs';
+import { SnackbarService } from '../../../core/components/custom-snackbar/snackbar.service';
 
 // declare var Razorpay: any;
 declare var Razorpay: any;
 
 @Component({
-  selector: 'app-checkout',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    FormsModule,
-    CommonModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIcon
-  ],
-  templateUrl: './checkout.component.html',
-  styleUrl: './checkout.component.css'
+    selector: 'app-checkout',
+    imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        CommonModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIcon,
+    ],
+    templateUrl: './checkout.component.html',
+    styleUrl: './checkout.component.css'
 })
 export class CheckoutComponent {
   checkoutForm: FormGroup;
@@ -52,6 +49,8 @@ export class CheckoutComponent {
   sessionDuration: number = 15 * 60; // 15 minutes in seconds
   formattedTime: string = '00:00';
   isPaymentStarted: boolean = false;
+  disableEmailInput: boolean = false;
+  paySuccessMessage: string = '';
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -60,7 +59,8 @@ export class CheckoutComponent {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private paymentService: PaymentService,
     private otpService: OtpService,
-    private userFileInfoService: UserFileInfoService
+    private userFileInfoService: UserFileInfoService,
+    private snackbarService: SnackbarService
   ) {
     this.checkoutForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -68,6 +68,24 @@ export class CheckoutComponent {
       otp: ['', [Validators.required, this.digitValidator(6)]],
       amount: [{ value: this.data.file.price, disabled: true }]
     });
+  }
+
+  validationMessages: any = {
+    required: 'This field is required.',
+    minlength: 'Minimum length not met.',
+    email: 'Enter a valid email address.',
+    pattern: 'Enter a valid OTP.',
+    invalidOtp: 'Invalid OTP.'
+  };
+
+
+  getErrorMessage(controlName: string): string {
+    const control = this.checkoutForm.get(controlName);
+    if (control && control.errors) {
+      const firstErrorKey = Object.keys(control.errors)[0];
+      return this.validationMessages[firstErrorKey] || '';
+    }
+    return '';
   }
 
   digitValidator(num: number): ValidatorFn {
@@ -88,6 +106,7 @@ export class CheckoutComponent {
     if (name && email && this.otpVerified) {
       this.isPaymentStarted = true;
         this.payErrorMessage = '';
+        this.paySuccessMessage = '';
         this.isPayNoError = true;
         this.verifyPayLoading = true;
         const isSessionActive = await this.isSessionActive();
@@ -112,7 +131,6 @@ export class CheckoutComponent {
     } else {
       this.isPayNoError = false;
       this.payErrorMessage = 'Please enter valid details';
-        // Handle validation error
     }
 }
 
@@ -125,7 +143,6 @@ startSessionTimer() {
       this.updateTimerDisplay(this.sessionDuration);
     } else {
       clearInterval(this.timerInterval);
-      // Optionally, handle session expiration (e.g., log the user out)
     }
   }, 1000);
 }
@@ -140,11 +157,24 @@ pad(value: number): string {
   return value.toString().padStart(2, '0');
 }
 
+showSnackbar(message: string, isError: boolean = false) {
+  this.snackbarService.openSnackBar({
+    message,
+    action: 'Close',
+    duration: 5000,
+    panelClass: isError ? 'custom-error-snackbar' : 'custom-snackbar',
+  });
+}
+
+
+
   sendOtp() {
     if (this.checkoutForm.get('email')?.valid) {
       this.loading = true;
+      this.disableEmailInput = true;
       this.otpService.sendOtp(this.checkoutForm.get('email')?.value, this.data.purpose).subscribe(
         () => {
+          this.showSnackbar('OTP sent successfully!');
           this.otpSent = true;
           this.loading = false;
           this.startTimer(constant.otpexpiry);
@@ -161,12 +191,12 @@ pad(value: number): string {
 
           else if (error.status === 429) {
             // Handle rate limiting error
-          }
-          else if(error.status === 500){
+            }
+          else if ([500, 503, 504, 0].includes(error.status)) {
             this.checkoutForm.get('email')?.setErrors({ serverError: true });
           }
 
-
+          this.showSnackbar('Error sending OTP. Please try again.', true);
           console.error('Error sending OTP:', error);
           this.loading = false;
         }
@@ -185,9 +215,10 @@ pad(value: number): string {
         (response: any) => {
           if (response.ok) {
             this.otpVerified = true;
+            localStorage.setItem('userEmail', this.checkoutForm.get('email')?.value);
             this.checkoutForm.get('email')?.disable();
             this.verifyOtpLoading = false;
-            this.startSessionTimer(); // Start the session timer upon OTP verification
+            this.startSessionTimer(); 
           } else {
             this.checkoutForm.get('otp')?.setErrors({ invalidOtp: true });
             this.verifyOtpLoading = false;
@@ -201,6 +232,13 @@ pad(value: number): string {
     }
   }
 
+  onEmailChange(event:any) {
+    this.disableEmailInput = false;
+    this.otpSent = false;
+    this.otpVerified = false;
+    this.checkoutForm.get('otp')?.reset();
+  }
+
 
   startTimer(t:number) {
     this.timer = t;
@@ -208,7 +246,7 @@ pad(value: number): string {
       if (this.timer > 0) {
         this.timer--;
       } else {
-        this.otpSent = false;
+        // this.otpSent = false;
         clearInterval(this.timerInterval);
       }
     }, 1000);
@@ -240,7 +278,7 @@ pad(value: number): string {
 
     this.paymentService.createOrder(paymentDetails).subscribe((order: any) => {
       const options = {
-        key: environment.razorpayKey, // Enter the Key ID generated from the Dashboard
+        key: environment.razorpayKey, 
         amount: parseInt(order.amount),
         currency: order.currency,
         name: 'Priyanka\'s Repository',
@@ -273,29 +311,30 @@ pad(value: number): string {
           email: this.checkoutForm.get('email')?.value,
           purchase: {
             filename: this.data.filename,
-            purchase: {
-              fileid: this.data.file._id,
-              amount: this.checkoutForm.get('amount')?.value,
-              currency: 'INR',
-              offer_id: 'offer_12345',
-              updatedAt: new Date().getTime(),
-              paymentid: paymentResponse.razorpay_payment_id,
-              status: 'success',
-              entity: "file"
-            },
-          },
+            fileid: this.data.file._id,
+            amount: this.checkoutForm.get('amount')?.value,
+            currency: 'INR',
+            offer_id: 'offer_12345',
+            updatedAt: new Date().getTime(),
+            paymentid: paymentResponse.razorpay_payment_id,
+            status: 'success',
+            entity: "file",
+            orderid:paymentResponse.razorpay_order_id
+        },
         };
   
         try {
           const response = await this.userFileInfoService.insertUserFileInfo(userFileInfo).toPromise();
           console.log('User file info inserted:', response);
+          this.router.navigate([`/success-receipt/${this.data.file._id}`]);
+          this.dialogRef.close();
+  
         } catch (error) {
+          this.handlePaymentFailure('Payment successful, Failed to update user file info');
           console.error('Error inserting user file info:', error);
           this.saveUserInfoToJson(userFileInfo);
         }
   
-        this.router.navigate(['/success-receipt']);
-        this.dialogRef.close();
       } else {
         this.handlePaymentFailure('Payment verification failed');
       }
@@ -329,27 +368,26 @@ pad(value: number): string {
       this.verifyPayLoading = true;
       const name = this.checkoutForm.get('name')?.value;
       const email = this.checkoutForm.get('email')?.value;
-      const otp = this.checkoutForm.get('otp')?.value;
+      // const otp = this.checkoutForm.get('otp')?.value;
   
-      const response = await this.userFileInfoService.getUserFileInfoAsync(name, email);
+      const response = await firstValueFrom(this.userFileInfoService.getUserFileInfoAsync(name, email,this.data.file._id));
   
       if (response.ok) {
         const response1 = response.body as any;
-  
-        const fileRec = response1.data.user.purchases.find((file: any) => {
-          return this.data.file._id == file.purchase.id && file.purchase.status === 'success';
-        });
-  
-        if (fileRec) {
+        console.log('User file info:', response1);
+        if (response1.data) {
           this.alreadyPaid = true;
-          this.userFileInfoService.emailFileInfo({fileid:fileRec.id,userid:response1.data.user._id})
+          this.userFileInfoService.emailFileInfo({fileid:this.data.file._id,email})
           .subscribe({
               next: (res: any) => {
+                this.paySuccessMessage = 'Already paid. A confirmation email has been resent.';
                 console.log('File info sent successfully:', res);
                 this.verifyPayLoading = false;
               },
               error: (err: any) => {
                 console.error('Failed to send file info:', err);
+                this.isPayNoError = false;
+                this.payErrorMessage = 'Alreaady paid but fFailed to send file info email';
                 this.verifyPayLoading = false;
               }
             });
@@ -403,7 +441,9 @@ pad(value: number): string {
         this.payErrorMessage = error.message + ' ...Please try again';
       }
     
-      this.verifyPayLoading = false;
+      if (this.data.purpose !== 'pay') {
+        this.verifyPayLoading = false;
+      }
     }
   }
   

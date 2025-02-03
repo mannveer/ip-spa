@@ -5,13 +5,13 @@
       <div class="footer-social-media-container">
         <div class="social-media-title">Follow us</div>
         <div class="social-media-content">
-          <a href="https://www.instagram.com/priyanka_png/" target="_blank" aria-label="Instagram" class="social-media-link">
+          <a href="https://www.instagram.com/priyanka_png/" rel="noopener" target="_blank" aria-label="Instagram" class="social-media-link">
             <img src="https://cdn.prod.website-files.com/622cadb01e0860949cee3d08/622f6de5d0f4987f636c6ba2_instagram%20(1).svg" loading="lazy" alt="Instagram" class="social-media-icon">
           </a>
-          <a href="https://www.youtube.com/c/priyankagraphicdesigner" target="_blank" aria-label="YouTube" class="social-media-link">
+          <a href="https://www.youtube.com/c/priyankagraphicdesigner" rel="noopener" target="_blank" aria-label="YouTube" class="social-media-link">
             <img src="https://cdn.prod.website-files.com/622cadb01e0860949cee3d08/622f6de63a49487201780729_youtube.svg" loading="lazy" alt="YouTube" class="social-media-icon">
           </a>
-          <a href="https://www.linkedin.com/in/priyanka-graphic-designer-518616247/" target="_blank" aria-label="LinkedIn" class="social-media-link">
+          <a href="https://www.linkedin.com/in/priyanka-graphic-designer-518616247/" rel="noopener" target="_blank" aria-label="LinkedIn" class="social-media-link">
             <img src="https://cdn.prod.website-files.com/622cadb01e0860949cee3d08/622f6de64c027bcfcd9f5a2b_linkedin.svg" loading="lazy" alt="LinkedIn" class="social-media-icon">
           </a>
         </div>
@@ -19,12 +19,23 @@
       <!-- Footer Links -->
       <div class="footer-brand-content">
         <ul class="footer-list">
-          <li class="footer-list-item"><a href="https://ipriyanka.com/about/privacy-policy.html" target="_blank" class="link">Privacy Policy</a></li>
-          <li class="footer-list-item"><a href="https://ipriyanka.com/about/terms-and-conditions.html" target="_blank" class="link">Terms &amp; Conditions</a></li>
-          <li class="footer-list-item"><a href="https://ipriyanka.com/about/cancellation-refund-policy.html" target="_blank" class="link">Refund &amp; Cancellation</a></li>
-          <li class="footer-list-item"><a href="https://ipriyanka.com/about/disclaimer.html" target="_blank" class="link">Disclaimer</a></li>
-          <li class="footer-list-item"><a href="/contact" class="link">Contact Us</a></li>
+          <li class="footer-list-item">
+            <a [routerLink]="['/privacy-policy']" target="_blank" rel="noopener noreferrer" class="link">Privacy Policy</a>
+          </li>
+          <li class="footer-list-item">
+            <a [routerLink]="['/terms-and-conditions']" target="_blank" rel="noopener noreferrer" class="link">Terms &amp; Conditions</a>
+          </li>
+          <li class="footer-list-item">
+            <a [routerLink]="['/refund-and-cancellation']" target="_blank" rel="noopener noreferrer" class="link">Refund &amp; Cancellation</a>
+          </li>
+          <li class="footer-list-item">
+            <a [routerLink]="['/disclaimer']" target="_blank" rel="noopener noreferrer" class="link">Disclaimer</a>
+          </li>
+          <li class="footer-list-item">
+            <a [routerLink]="['/contact']" class="link">Contact Us</a>
+          </li>
         </ul>
+        
       </div>
       <!-- Copyright Information -->
       <div class="footer-copyright">

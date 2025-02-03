@@ -50,16 +50,7 @@ export class PaymentService {
     return throwError(errorMessage);
   }
 
-  isPaymentSuccessful(): Observable<boolean> {
-    // This should ideally call your backend to verify the payment status
-    return this.http.get<{ success: boolean }>('/api/payment/status').pipe(
-      map((response:any) => response.success),
-      catchError(error => {
-        console.error('Payment status check failed:', error);
-        return of(false); // Default to false on error
-      })
-    );
-  }
+  
 
   
 }

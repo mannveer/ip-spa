@@ -10,17 +10,16 @@ import { MatIconModule } from '@angular/material/icon';
 
 
 @Component({
-  selector: 'app-contact',
-  standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatProgressSpinnerModule,
-    MatIconModule
-  ],
-  templateUrl: './contact.component.html',
-  styleUrls: ['./contact.component.css']
+    selector: 'app-contact',
+    imports: [CommonModule, FormsModule, ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatProgressSpinnerModule,
+        MatIconModule
+    ],
+    templateUrl: './contact.component.html',
+    styleUrls: ['./contact.component.css']
 })
 export class ContactComponent {
   contactForm: FormGroup;

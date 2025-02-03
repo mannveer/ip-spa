@@ -21,7 +21,9 @@
 
   <mat-form-field appearance="fill">
     <mat-label>Email</mat-label>
-    <input class="input-box" matInput [disabled]="otpSent || otpVerified" formControlName="email" placeholder="Enter your email" required>
+    <input class="input-box" matInput 
+    (ngModelChange)="onEmailChange($event)"
+    [attr.disabled]="(otpSent || otpVerified) || disableEmailInput ? true : null" formControlName="email" placeholder="Enter your email" required>
     <span *ngIf="otpVerified" class="checkmark">verified✔</span>
     <div *ngIf="checkoutForm.get('email')?.errors?.['required'] && checkoutForm.get('email')?.touched" class="error-message">
       Email is required.
@@ -30,14 +32,14 @@
       Enter a valid email.
     </div>
     <div *ngIf="checkoutForm.get('email')?.errors?.['serverError'] && checkoutForm.get('email')?.touched" class="error-message">
-      Something went wrong, unable to verify.
+      Something went wrong, unable to generate Otp.
     </div>
-    <button *ngIf="!otpVerified" type="button" class="otp-button" (click)="sendOtp()" [disabled]="otpSent || checkoutForm.get('email')?.invalid || loading">
+    <button *ngIf="!otpVerified" type="button" class="otp-button" (click)="sendOtp()" [disabled]="(checkoutForm.get('email')?.invalid || loading) || (otpSent && timer!==0)">
       <ng-container *ngIf="loading; else buttonText">
         <div class="button-loader"></div>
       </ng-container>
       <ng-template #buttonText>
-        {{ otpSent ? 'Resend(' + timer + 's)' : 'Send OTP' }}
+        {{ otpSent ? 'Resend OTP' + (timer !== 0 ? '(' + timer + 's)' : '') : 'Send OTP' }}
       </ng-template>
     </button>
   </mat-form-field>
@@ -45,14 +47,8 @@
   <mat-form-field appearance="fill" *ngIf="otpSent && !otpVerified">
     <mat-label>OTP</mat-label>
     <input class="input-box" matInput formControlName="otp" placeholder="Enter your otp" required>
-    <div *ngIf="checkoutForm.get('otp')?.errors?.['required'] && checkoutForm.get('otp')?.touched && (otpSent && !otpVerified)" class="error-message">
-      OTP is required.
-    </div>
-    <div *ngIf="checkoutForm.get('otp')?.errors?.['digitValidator'] && checkoutForm.get('otp')?.touched && (otpSent && !otpVerified)" class="error-message">
-      Enter a valid otp.
-    </div>
-    <div *ngIf="checkoutForm.get('otp')?.errors?.['invalidOtp'] && checkoutForm.get('otp')?.touched && (otpSent && !otpVerified)" class="error-message">
-      Invalid OTP.
+    <div *ngIf="checkoutForm.get('otp')?.touched && checkoutForm.get('otp')?.invalid" class="error-message">
+      {{ getErrorMessage('otp') }}
     </div>
     <button type="button" class="verify-button" (click)="verifyOtp()" [disabled]="checkoutForm.get('otp')?.invalid || verifyOtpLoading">
       <ng-container *ngIf="verifyOtpLoading; else buttonText">
@@ -84,7 +80,7 @@
       {{ payErrorMessage }}
     </div>
     <div class="success-note" *ngIf="alreadyPaid">
-      Already paid. A confirmation email has been resent.
+      {{paySuccessMessage}}
     </div>
     <div class="note">*Mandatory to verify email first</div>
   </form>
