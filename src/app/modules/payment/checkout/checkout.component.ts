@@ -274,6 +274,7 @@ showSnackbar(message: string, isError: boolean = false) {
       amount: this.checkoutForm.get('amount')?.value,
       currency: 'INR',
       receipt: this.generateReceiptNumber(),
+      fileid: this.data.file._id
     };
 
     this.paymentService.createOrder(paymentDetails).subscribe((order: any) => {
@@ -281,7 +282,7 @@ showSnackbar(message: string, isError: boolean = false) {
         key: environment.razorpayKey, 
         amount: parseInt(order.amount),
         currency: order.currency,
-        name: 'Priyanka\'s Repository',
+        name: environment.storename,
         description: 'Purchase Description',
         order_id: order.id,
         handler: (response: any) => {
@@ -290,6 +291,7 @@ showSnackbar(message: string, isError: boolean = false) {
         prefill: {
           name: this.checkoutForm.get('name')?.value,
           email: this.checkoutForm.get('email')?.value,
+          fileId: this.data.file._id
         },
         theme: {
           color: '#3399cc',
@@ -307,18 +309,9 @@ showSnackbar(message: string, isError: boolean = false) {
       const verificationResult = await this.paymentService.verifyPayment(paymentResponse).toPromise();
       if (verificationResult?.success) {  
         const userFileInfo = {
-          name: this.checkoutForm.get('name')?.value,
-          email: this.checkoutForm.get('email')?.value,
           purchase: {
-            filename: this.data.filename,
-            fileid: this.data.file._id,
-            amount: this.checkoutForm.get('amount')?.value,
-            currency: 'INR',
             offer_id: 'offer_12345',
-            updatedAt: new Date().getTime(),
             paymentid: paymentResponse.razorpay_payment_id,
-            status: 'success',
-            entity: "file",
             orderid:paymentResponse.razorpay_order_id
         },
         };

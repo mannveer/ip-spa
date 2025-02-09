@@ -1,0 +1,22 @@
+<div class="policy-container">
+    <h1>Cancellation and Refund Policy</h1>
+    <p class="effective-date">Effective Date: {{ effectiveDate }}</p>
+  
+    <div class="section" *ngFor="let section of policySections">
+      <h2>{{ section.title }}</h2>
+      <div [innerHTML]="section.content"></div>
+    </div>
+  
+    <div class="section">
+      <h2>Contact Us</h2>
+      <p>
+        If you have any questions about this Refund Policy or require assistance, please reach out to us at:
+      </p>
+      <ul>
+        <li>Email: <a href="mailto:support@ipriyanka.com">hello&#64;ipriyanka.com</a></li>
+        <li>Website: <a href="https://www.ipriyanka.com/contact" rel="noopener" target="_blank">www.ipriyanka.com/contact</a></li>
+      </ul>
+      <p>We appreciate your understanding and thank you for supporting our digital products!</p>
+    </div>
+  </div>
+  

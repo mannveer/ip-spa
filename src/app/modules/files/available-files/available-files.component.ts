@@ -80,7 +80,6 @@ export class AvailableFilesComponent implements OnInit {
       next: (filesData: CustomFileModel[]) => {
         this.files = filesData;
         this.filteredFiles = filesData;
-        if(!environment.cloudinary)
         this.loadPreviews();
         this.populateFilterOptions();
       },
@@ -106,7 +105,6 @@ export class AvailableFilesComponent implements OnInit {
       next: (filesData: CustomFileModel[]) => {
         this.files = filesData;
         this.filteredFiles = filesData;
-        if(!environment.cloudinary)
         this.loadPreviews();
         this.populateFilterOptions(); 
         this.isLoading = false; 
@@ -295,8 +293,15 @@ export class AvailableFilesComponent implements OnInit {
   }
 
   loadPreviews(): void {
+    const defaultPreviewUrl = 'assets/defaultpreview/Untitled-1.png';
+    // const cloudinaryPreviewUrl = 'https://res.cloudinary.com/dz2vzqkxv/image/upload/v1626669820/Untitled-1.png';
+
     this.files.forEach(file => {
-      file.previewUrl = this.filesService.getPreviewUrl(file.filename) || 'assets/defaultpreview/Untitled-1.png';
+      if (!environment.cloudinary) {
+        file.previewUrl = this.filesService.getPreviewUrl(file.filename) || defaultPreviewUrl;
+      } else if (!file.previewUrl) {
+        file.previewUrl = defaultPreviewUrl;
+      }
     });
   }
   

@@ -9,6 +9,7 @@ export const environment = {
     LastUpdatedTermsAndConditions: '2nd December 2024',
     LastUpdatedRefundPolicy: '2nd December 2024',
     cloudinary: true,
+    storename: 'Priyanka\'s Store',
   
   };
   
