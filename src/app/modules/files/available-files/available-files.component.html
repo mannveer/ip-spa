@@ -11,7 +11,7 @@
   
   <div class="search-filter-container">
     <!-- Search Box -->
-    <div class="search-container">
+    <!-- <div class="search-container">
       <mat-form-field appearance="outline" class="search-input">
         <mat-label>Search files</mat-label>
         <input
@@ -34,7 +34,7 @@
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
-    </div>
+    </div> -->
   
     <!-- Filter Section -->
     <mat-expansion-panel class="filters-panel" [(expanded)]="showFilters">
@@ -118,6 +118,30 @@
       </div>
       <div>
         <button mat-raised-button style="background-color: black; color: white;" (click)="applyFilters()">Apply Filters</button>
+      </div>
+      <div class="search-container">
+        <mat-form-field appearance="outline" class="search-input">
+          <mat-label>Search files</mat-label>
+          <input
+            matInput
+            [(ngModel)]="searchQuery"
+            (input)="onSearchInput($event)"
+            [matAutocomplete]="auto"
+            (focus)="showSuggestions = true"
+            (blur)="hideSuggestions()"
+            placeholder="Search files"
+          />
+          <button *ngIf="searchQuery" mat-icon-button matSuffix aria-label="Clear" (click)="clearSearch()">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-icon matPrefix>search</mat-icon>
+    
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectSuggestion($event.option.value)">
+            <mat-option *ngFor="let suggestion of filteredFiles" [value]="suggestion">
+              {{ suggestion.originalfilename }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
       </div>
     </mat-expansion-panel>
   </div>

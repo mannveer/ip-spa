@@ -1,86 +1,150 @@
-<h1 style="
-text-align: center;
-font-family: monospace;
-text-decoration: underline;
-">This is a dummy version of ipriyanka.com</h1>
+<!-- featured-work.component.html -->
 
-<section class="featured-work">
-  <div class="container">
-    <h2 class="section-title">Explore My Projects</h2>
-    <p class="section-subtitle">
-      Explore my latest and most impactful design projects, spanning multiple categories.
-    </p>
-
-    <div class="filters">
-      <button
-        class="filter-btn"
-        [ngClass]="{ 'active-filter': currentCategory === 'all' }"
-        (click)="filterProjects('all')"
-      >
-        All
-      </button>
-      <ng-container *ngFor="let category of categories">
-        <button
-          class="filter-btn"
-          [ngClass]="{ 'active-filter': currentCategory === category }"
-          (click)="filterProjects(category)"
-        >
-          {{ category }}
+  <!-- <div class="container-offer">
+    <a routerLink="/buy-thumbnails" class="premium-banner">
+      <div class="banner-content">
+        <div class="banner-text">
+          <span class="sparkle">✨</span>
+          <h3>Instant Access to Premium Thumbnail Designs</h3>
+          <p>Elevate your content with professionally crafted visuals</p>
+        </div>
+        <div class="banner-cta">
+          <span>Shop Now</span>
+          <svg class="arrow" viewBox="0 0 24 24">
+            <path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+          </svg>
+        </div>
+      </div>
+      <div class="banner-glow"></div>
+    </a>
+    </div> -->
+<section class="portfolio-page">
+  <!-- Hero Section -->
+  <header class="hero-section">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 class="main-heading">
+          <span class="gradient-text">Hi, I'm Priyanka</span>
+          <span class="creative-sparkle">🎨</span>
+        </h1>
+        <h2 class="tagline">Graphic designer</h2>
+        <p class="intro-text">Transforming ideas into compelling visual experiences through strategic design solutions
+        </p>
+        <a routerLink="/about" class="cta-button">View Portfolio</a>
+      </div>
+      <div class="social-links">
+        <a href="https://www.behance.net/PriyankaGD" class="social-icon">Behance</a>
+        <a href="https://dribbble.com/priyanka" class="social-icon">Dribbble</a>
+        <a href="https://www.linkedin.com/in/priyanka-graphic-designer-518616247/" class="social-icon">LinkedIn</a>
+      </div>
+    </div>
+    <div class="decorative-shapes">
+      <div class="shape circle"></div>
+      <div class="shape triangle"></div>
+      <div class="shape squiggle"></div>
+    </div>
+  </header>
+  <!-- Design Specialties -->
+  <section class="specialties-section">
+    <div class="specialty-card">
+      <div class="icon-box brand-identity"></div>
+      <h3>Brand Identity</h3>
+      <p>Crafting memorable brand experiences</p>
+    </div>
+    <div class="specialty-card">
+      <div class="icon-box digital-art"></div>
+      <h3>Digital Illustration</h3>
+      <p>Bringing stories to life through art</p>
+    </div>
+    <div class="specialty-card">
+      <div class="icon-box typography"></div>
+      <h3>Typography</h3>
+      <p>Mastering the art of letterforms</p>
+    </div>
+  </section>
+  <section class="featured-work">
+    <div class="container">
+      <a routerLink="/files/category/thumbnails-design" class="premium-banner">
+        <div class="banner-content">
+          <div class="banner-text">
+            <span class="sparkle">✨</span>
+            <h3>Instant Access to Premium Thumbnail Designs</h3>
+            <p>Elevate your content with professionally crafted visuals</p>
+          </div>
+          <div class="banner-cta">
+            <span>Get Now</span>
+            <svg class="arrow" viewBox="0 0 24 24">
+              <path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            </svg>
+          </div>
+        </div>
+        <div class="banner-glow"></div>
+      </a>
+      <h2 class="section-title">Explore my designs</h2>
+      <!-- <p class="section-subtitle">
+      A selection of strategic design solutions across various disciplines
+    </p> -->
+      <div class="filters">
+        <button *ngFor="let category of categories" class="filter-btn"
+          [ngClass]="{ 'active-filter': currentCategory === category }" (click)="filterProjects(category)">
+          {{ category | titlecase }}
         </button>
-      </ng-container>
+      </div>
+      <div class="projects-grid" @staggerAnimation>
+        <!-- <div class="project-card" *ngFor="let project of displayedProjects"
+          [@cardAnimation]="project.available ? 'active' : 'inactive'"> -->
+          <div class="project-card" *ngFor="let project of displayedProjects">
+          <div class="card-inner">
+            <div class="card-image">
+              <img [src]="project.imageUrl" [alt]="project.title" (error)="project.imageUrl = 'assets/placeholder.png'"
+                class="project-image" />
+              <div class="image-overlay"></div>
+            </div>
+            <div class="card-content">
+              <div class="category-tag">{{ project.category }}</div>
+              <h3 class="project-title">{{ project.title }}</h3>
+              <p class="project-description">{{ project.description }}</p>
+              <div class="project-meta">
+                <span class="availability" [class.available]="project.available">
+                  {{ project.available ? 'Case Study Available' : 'Coming Soon' }}
+                </span>
+                <a *ngIf="project.available" [routerLink]="project.projectUrl" class="cta-link">
+                  Explore Project →
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a routerLink="/about" class="portfolio-cta">
+        View Comprehensive Portfolio
+        <svg class="cta-arrow" viewBox="0 0 24 24">
+          <path d="M5 12h14M12 5l7 7-7 7" />
+        </svg>
+      </a>
     </div>
-    
-    <mat-grid-list cols="4" rowHeight="350px" gutterSize="20px">
-      <mat-grid-tile *ngFor="let project of displayedProjects">
-        <mat-card class="project-card" [ngClass]="{ 'unavailable': !project.available }">
-          <a 
-            [routerLink]="project.projectUrl" 
-            attr.aria-label="{{ project.title }}"
-            [class.disabled]="!project.available" 
-            [attr.tabindex]="project.available ? null : -1"
-          >
-            <img
-              mat-card-image
-              [src]="project.imageUrl"
-              [alt]="project.title"
-              (error)="project.imageUrl = 'assets/placeholder.png'"
-            />
-            <mat-card-content>
-              <h3 mat-card-title>{{ project.title }}</h3>
-              <p mat-card-subtitle>{{ project.description }}</p>
-              <mat-chip-listbox>
-                <mat-chip color="primary">{{ project.category }}</mat-chip>
-              </mat-chip-listbox>
-              <p class="availability-message">
-                {{ project.available ? 'Available' : 'Currently Unavailable' }}
-              </p>
-            </mat-card-content>
-          </a>
-        </mat-card>
-      </mat-grid-tile>
-    </mat-grid-list>
-
-    <div class="pagination">
-      <button
-        mat-raised-button
-        color="primary"
-        class="pagination-btn"
-        (click)="loadPreviousPage()"
-        [disabled]="currentPage === 0"
-      >
-        Previous
-      </button>
-      <button
-        mat-raised-button
-        color="primary"
-        class="pagination-btn"
-        (click)="loadNextPage()"
-        [disabled]="(currentPage + 1) * projectsPerPage >= getFilteredProjects().length"
-      >
-        Next
-      </button>
+  </section>
+  <div class="process-banner">
+    <div class="process-step">
+      <span class="step-number">1</span>
+      <h4>Discover</h4>
+      <p>Research & Strategy</p>
     </div>
-
-    <a routerLink="/about" mat-stroked-button color="black" class="btn-primary">View Full Portfolio</a>
+    <div class="process-step">
+      <span class="step-number">2</span>
+      <h4>Design</h4>
+      <p>Concept Development</p>
+    </div>
+    <div class="process-step">
+      <span class="step-number">3</span>
+      <h4>Deliver</h4>
+      <p>Final Execution</p>
+    </div>
   </div>
+  <!-- Footer -->
+  <footer class="designer-footer">
+    <div class="ink-splash"></div>
+    <p>Let's create something extraordinary together</p>
+    <a href="mailto:hello&#64;ipriyanka.com" class="email-cta">hello&#64;ipriyanka.com</a>
+  </footer>
 </section>

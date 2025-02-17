@@ -16,20 +16,11 @@ export class OtpService {
 
   constructor(private http: HttpClient, private authservice:AuthService) {}
 
-  private getHttpOptions(): { headers: HttpHeaders } {
-    const token = localStorage.getItem('authToken'); // Retrieve your token from storage
-    return {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        // Authorization: `Bearer ${token}` // Assuming Bearer token authentication
-      })
-    };
-  }
 
   sendOtp(email: string,purpose:string): Observable<HttpResponse<OtpResponse>> {
     const requestBody: SendOtpRequest = { email,purpose };
     // Merge the existing HTTP options with { observe: 'response' }
-    const options = { ...this.getHttpOptions(), observe: 'response' as 'response' };
+    const options = { observe: 'response' as 'response' };
     return this.http.post<OtpResponse>(`${this.apiUrl}/generate`, requestBody, options)
       .pipe(
         catchError(this.handleError)
@@ -37,7 +28,7 @@ export class OtpService {
   }
 
   verifyOtp1(otpDetails: VerifyOtpRequest): Observable<HttpResponse<VerificationResult>> {
-    const options = { ...this.getHttpOptions(), observe: 'response' as 'response' };
+    const options = { observe: 'response' as 'response' };
     return this.http.post<VerificationResult>(`${this.apiUrl}/validate`, otpDetails, options)
       .pipe(
         catchError(this.handleError)

@@ -7,6 +7,10 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
+import { trigger, transition, query, style, stagger, animate, state } from '@angular/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 interface Project {
   title: string;
@@ -22,16 +26,29 @@ interface Project {
     imports: [
         CommonModule,
         RouterModule,
-        MatCardModule,
-        MatButtonModule,
-        MatGridListModule,
-        MatPaginatorModule,
-        MatChipsModule,
-        MatDividerModule,
     ],
     templateUrl: './featured-work.component.html',
-    styleUrls: ['./featured-work.component.css']
-})
+    styleUrls: ['./featured-work.component.css'],
+    // animations: [
+    //   trigger('staggerAnimation', [
+    //     transition('* => *', [
+    //       query(':enter', [
+    //         style({ opacity: 0, transform: 'translateY(20px)' }),
+    //         stagger(100, [
+    //           animate('0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+    //             style({ opacity: 1, transform: 'translateY(0)' }))
+    //         ])
+    //       ], { optional: true })
+    //     ])
+    //   ]),
+    //   trigger('cardAnimation', [
+    //     state('active', style({ opacity: 1 })),
+    //     state('inactive', style({ opacity: 0.5 })),
+    //     transition('active <=> inactive', animate('0.3s ease'))
+    //   ])
+    // ]
+   })
+
 export class FeaturedWorkComponent implements OnInit {
   projects: Project[] = [];
   displayedProjects: Project[] = [];
@@ -40,61 +57,29 @@ export class FeaturedWorkComponent implements OnInit {
   currentCategory: string = 'all';
   allProjects: Project[] = [];
   categories: string[] = [];
+  private apiUrlEnv = environment.apiUrl;
+  private API_URL = `${this.apiUrlEnv}/projects`;
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    // Same project list as earlier
-    this.allProjects = [
-      {
-        title: 'Thumbnail Design',
-        description: 'Creating eye-catching and engaging thumbnail designs for online content.',
-        imageUrl: 'https://via.placeholder.com/600x400.png?text=Thumbnail+Design',
-        projectUrl: '/files/category/thumbnails-design',
-        category: 'Graphic Design',
-        available: true
+    this.http.get<Project[]>(this.API_URL).subscribe(
+      (data) => {
+      this.allProjects = data;
+      this.projects = this.allProjects;
+      this.updateDisplayedProjects();
+      this.allProjects.forEach((x) => {
+        if (this.categories.indexOf(x.category) === -1) this.categories.push(x.category);
+      });
+      this.categories = ['all', ...this.categories];
       },
-      {
-        title: 'Luxury Brand Identity',
-        description: 'Crafting a high-end brand identity for a luxury fashion line.',
-        imageUrl: 'https://via.placeholder.com/600x400.png?text=Luxury+Brand+Identity',
-        projectUrl: '/files/luxury-brand',
-        category: 'Branding',
-        available: false
-      },
-      {
-        title: 'Art Magazine Editorial',
-        description: 'Creating a visually compelling editorial layout for an art-focused magazine.',
-        imageUrl: 'https://via.placeholder.com/600x400.png?text=Art+Magazine+Editorial',
-        projectUrl: '/portfolio/art-magazine',
-        category: 'Print Design',
-        available: false
-      },
-      {
-        title: 'Corporate Brochure Design',
-        description: 'Designing a professional brochure for a corporate client.',
-        imageUrl: 'https://via.placeholder.com/600x400.png?text=Corporate+Brochure+Design',
-        projectUrl: '/portfolio/corporate-brochure',
-        category: 'Print Design',
-        available: false
-      },
-      {
-        title: 'Product Packaging Design',
-        description: 'Creating elegant and functional packaging for a premium product line.',
-        imageUrl: 'https://via.placeholder.com/600x400.png?text=Product+Packaging+Design',
-        projectUrl: '/portfolio/product-packaging',
-        category: 'Packaging Design',
-        available: false
+      (error) => {
+      console.error('Error fetching projects:', error);
       }
-    ];
-
-    this.allProjects.forEach((x) => {
-      if (this.categories.indexOf(x.category) == -1) this.categories.push(x.category);
-    });
-
-    this.projects = this.allProjects;
-    this.updateDisplayedProjects();
+    );
   }
+
+  
 
   filterProjects(category: string): void {
     this.currentCategory = category;
